@@ -171,7 +171,7 @@
 <ion-modal [isOpen]="selectedVaccineForDetail() !== null" (didDismiss)="selectedVaccineForDetail.set(null)">
   <ng-template>
     @if (selectedVaccineForDetail(); as vDetail) {
-      <div class="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl relative overflow-hidden animate-fade-in">
+      <div class="p-6 relative overflow-hidden">
         <div class="absolute left-0 right-0 top-0 h-2 bg-gradient-to-r from-brand-green to-brand-orange"></div>
         <div class="flex items-start justify-between gap-4 mt-1.5">
           <div>
@@ -221,7 +221,7 @@
 <ion-modal [isOpen]="vaccineToLog() !== null" (didDismiss)="vaccineToLog.set(null)">
   <ng-template>
     @if (vaccineToLog(); as logData) {
-      <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl relative overflow-hidden">
+      <div class="p-6 relative overflow-hidden">
         <div class="absolute left-0 right-0 top-0 h-2 bg-brand-green"></div>
         <div class="flex items-start justify-between gap-4 mt-1">
           <div>
@@ -278,7 +278,7 @@
 <ion-modal [isOpen]="showChildModal()" (didDismiss)="showChildModal.set(false)">
   <ng-template>
     @if (showChildModal()) {
-      <div class="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl relative overflow-hidden animate-fade-in max-h-[90vh] overflow-y-auto">
+      <div class="p-6 relative overflow-hidden max-h-[90vh] overflow-y-auto">
         <div class="absolute left-0 right-0 top-0 h-2 bg-gradient-to-r from-brand-yellow to-brand-orange"></div>
         <div class="flex items-start justify-between gap-4 mt-1">
           <div>
