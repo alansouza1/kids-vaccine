@@ -13,6 +13,18 @@
   --color-brand-light: #FBF9F6;
 }
 
+/* 
+  Reset overrides to allow standard browser scrolling within Ionic structure.
+  By default, Ionic forces overflow-hidden on html, body, and ion-app.
+*/
+html, body, ion-app, ion-router-outlet, app-root {
+  position: relative !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  min-height: 100% !important;
+}
+
 body {
   background-color: var(--color-brand-light);
   color: var(--color-brand-dark);
@@ -21,4 +33,21 @@ body {
 
 h1, h2, h3, h4, .font-display {
   font-family: var(--font-display);
+}
+
+/* Custom gorgeous scrollbar for cards */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(71, 60, 51, 0.04);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(71, 60, 51, 0.15);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(71, 60, 51, 0.3);
 }
