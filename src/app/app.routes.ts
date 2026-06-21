@@ -1,8 +1,7 @@
 import { Routes } from '@angular/router';
+import { VaccineApp } from './features/vaccine-app';
 
 export const routes: Routes = [
-  {
-    path: '',
-    loadChildren: () => import('./tabs/tabs.routes').then((m) => m.routes),
-  },
+  { path: '', component: VaccineApp },
+  { path: '**', redirectTo: '' }
 ];
