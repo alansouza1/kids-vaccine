@@ -1,0 +1,53 @@
+<header id="vax-main-header" class="sticky top-0 z-40 bg-white border-b border-brand-dark/5 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+    <div id="vax-brand-logo-group" class="flex items-center gap-2.5">
+      <div class="w-10 h-10 rounded-xl bg-brand-green flex items-center justify-center shadow-md animate-bounce duration-1000">
+        <ion-icon class="text-white text-2xl" name="shield-half"></ion-icon>
+      </div>
+      <div>
+        <h1 class="text-xl font-bold tracking-tight text-brand-dark font-display leading-tight">Caderneta Infantil</h1>
+        <p class="text-[10px] text-brand-dark/60 font-semibold tracking-wider uppercase">Cyrrus Saúde Digital</p>
+      </div>
+    </div>
+
+    <div id="vax-desktop-menu" class="hidden md:flex items-center gap-1.5 bg-brand-dark/5 p-1 rounded-full">
+      <button (click)="tabChange.emit('dashboard')"
+        [class]="activeTab === 'dashboard' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
+        class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
+        <ion-icon class="text-sm" name="grid"></ion-icon>
+        Painel
+      </button>
+      <button (click)="tabChange.emit('timeline')"
+        [class]="activeTab === 'timeline' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
+        class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
+        <ion-icon class="text-sm" name="book"></ion-icon>
+        Caderneta
+      </button>
+      <button (click)="tabChange.emit('campaigns')"
+        [class]="activeTab === 'campaigns' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
+        class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
+        <ion-icon class="text-sm" name="megaphone"></ion-icon>
+        Campanhas
+      </button>
+      <button (click)="tabChange.emit('children')"
+        [class]="activeTab === 'children' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
+        class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
+        <ion-icon class="text-sm" name="people"></ion-icon>
+        Meus Filhos
+      </button>
+    </div>
+
+    <div id="vax-header-actions" class="flex items-center gap-2">
+      <button (click)="resetData.emit()"
+        title="Redefinir Dados"
+        class="flex items-center justify-center p-2 rounded-lg text-brand-dark/60 hover:text-brand-dark hover:bg-brand-dark/5 transition">
+        <ion-icon name="refresh"></ion-icon>
+      </button>
+      <button (click)="addChild.emit()"
+        class="flex items-center gap-1.5 px-3 py-1.5 bg-brand-green text-white font-medium text-xs rounded-lg hover:shadow-md transition">
+        <ion-icon class="text-sm" name="add"></ion-icon>
+        <span class="hidden sm:inline">Adicionar Filho</span>
+      </button>
+    </div>
+  </div>
+</header>

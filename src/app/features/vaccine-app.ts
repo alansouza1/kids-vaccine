@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { IonIcon, IonContent, IonFooter, IonTabBar, IonTabButton, IonLabel, IonModal } from '@ionic/angular/standalone';
+import { IonIcon, IonContent, IonFooter, IonTabBar, IonTabButton, IonLabel } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   shieldHalf, grid, book, megaphone, people, refresh, add, addCircleOutline,
@@ -19,16 +18,22 @@ import { CampaignsTabComponent } from './tabs/campaigns/campaigns-tab.component'
 import { ChildrenTabComponent } from './tabs/children/children-tab.component';
 import { ChildCardComponent } from '../shared/components/child-card/child-card.component';
 import { ProgressCircleComponent } from '../shared/components/progress-circle/progress-circle.component';
+import { AppHeaderComponent } from './components/app-header/app-header.component';
+import { VaccineDetailModalComponent } from './components/vaccine-detail-modal/vaccine-detail-modal.component';
+import { VaccineLogModalComponent } from './components/vaccine-log-modal/vaccine-log-modal.component';
+import { ChildFormModalComponent } from './components/child-form-modal/child-form-modal.component';
 
 @Component({
   selector: 'app-vaccine-app',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule, ReactiveFormsModule, IonIcon, IonContent, IonFooter,
-    IonTabBar, IonTabButton, IonLabel, IonModal,
+    CommonModule, IonIcon, IonContent, IonFooter,
+    IonTabBar, IonTabButton, IonLabel,
     DashboardTabComponent, TimelineTabComponent, CampaignsTabComponent,
-    ChildrenTabComponent, ChildCardComponent, ProgressCircleComponent
+    ChildrenTabComponent, ChildCardComponent, ProgressCircleComponent,
+    AppHeaderComponent, VaccineDetailModalComponent, VaccineLogModalComponent,
+    ChildFormModalComponent
   ],
   templateUrl: './vaccine-app.html'
 })
@@ -42,26 +47,6 @@ export class VaccineApp {
   vaccineToLog = signal<{ vaccine: VaccinePreset; dose: DerivedDoseStatus } | null>(null);
   editingChild = signal<Child | null>(null);
   showChildModal = signal<boolean>(false);
-
-  readonly avatarOptions = ['👶🏼', '👶🏾', '👶🏻', '👧🏻', '👧🏼', '👧🏽', '👦🏽', '👦🏻', '👦🏾', '🦁', '🐻', '🦖', '🦄', '🐳'];
-
-  childForm = new FormGroup({
-    id: new FormControl(''),
-    name: new FormControl('', [Validators.required, Validators.minLength(2)]),
-    birthDate: new FormControl('', [Validators.required]),
-    gender: new FormControl<'M' | 'F'>('M', [Validators.required]),
-    avatar: new FormControl('👶🏼', [Validators.required]),
-    bloodType: new FormControl(''),
-    weight: new FormControl<number | null>(null, [Validators.min(0.1)]),
-    height: new FormControl<number | null>(null, [Validators.min(10)])
-  });
-
-  vaxLogForm = new FormGroup({
-    appliedDate: new FormControl('', [Validators.required]),
-    appliedPlace: new FormControl(''),
-    lotNumber: new FormControl(''),
-    vacinatorName: new FormControl('')
-  });
 
   filteredVaccineGroups = computed<ChildVaccineGroup[]>(() => {
     const query = this.timelineSearchQuery().toLowerCase().trim();
@@ -142,71 +127,16 @@ export class VaccineApp {
 
   openAddChildModal() {
     this.editingChild.set(null);
-    this.childForm.reset({ id: '', name: '', birthDate: '', gender: 'M', avatar: '👶🏼', bloodType: '', weight: null, height: null });
     this.showChildModal.set(true);
   }
 
   openEditChildModal(child: Child) {
     this.editingChild.set(child);
-    this.childForm.setValue({
-      id: child.id, name: child.name, birthDate: child.birthDate,
-      gender: child.gender, avatar: child.avatar,
-      bloodType: child.bloodType || '', weight: child.weight || null, height: child.height || null
-    });
     this.showChildModal.set(true);
   }
 
-  saveChild() {
-    if (this.childForm.invalid) { this.childForm.markAllAsTouched(); return; }
-    const value = this.childForm.value;
-    const isEditing = !!value.id;
-    const child = new Child({
-      id: isEditing ? (value.id as string) : `child_${Date.now()}`,
-      name: value.name as string,
-      birthDate: value.birthDate as string,
-      gender: value.gender as 'M' | 'F',
-      avatar: value.avatar as string,
-      bloodType: value.bloodType || undefined,
-      weight: value.weight ? Number(value.weight) : undefined,
-      height: value.height ? Number(value.height) : undefined
-    });
-    if (isEditing) { this.vaxService.updateChild(child); }
-    else { this.vaxService.addChild(child); }
-    this.showChildModal.set(false);
-  }
-
-  deleteChild(childId: string) {
-    if (confirm('Remover esta criança e todo o histórico? Esta ação não pode ser desfeita.')) {
-      this.vaxService.deleteChild(childId);
-    }
-  }
-
   openLogDoseModal(vaccine: VaccinePreset, dose: DerivedDoseStatus) {
-    const today = new Date().toISOString().split('T')[0];
     this.vaccineToLog.set({ vaccine, dose });
-    this.vaxLogForm.setValue({
-      appliedDate: dose.appliedDate || today,
-      appliedPlace: dose.appliedPlace || 'UBS Central',
-      lotNumber: dose.lotNumber || 'LT-' + Math.floor(Math.random() * 900000 + 100000) + 'X',
-      vacinatorName: dose.vacinatorName || 'Enf. Responsável'
-    });
-  }
-
-  saveDoseLog() {
-    if (this.vaxLogForm.invalid || !this.vaccineToLog()) { this.vaxLogForm.markAllAsTouched(); return; }
-    const value = this.vaxLogForm.value;
-    const data = this.vaccineToLog()!;
-    const childId = this.vaxService.activeChildId();
-    if (childId) {
-      this.vaxService.applyVaccineDose({
-        childId, vaccineId: data.vaccine.id, doseId: data.dose.doseId,
-        appliedDate: value.appliedDate as string,
-        appliedPlace: value.appliedPlace || undefined,
-        lotNumber: value.lotNumber || undefined,
-        vacinatorName: value.vacinatorName || undefined
-      });
-    }
-    this.vaccineToLog.set(null);
   }
 
   undoDose(vaccineId: string, doseId: string) {
@@ -216,20 +146,16 @@ export class VaccineApp {
     }
   }
 
+  deleteChild(childId: string) {
+    if (confirm('Remover esta criança e todo o histórico? Esta ação não pode ser desfeita.')) {
+      this.vaxService.deleteChild(childId);
+    }
+  }
+
   resetDatabase() {
     if (confirm('Redefinir para dados padrão do desafio?')) {
       this.vaxService.seedData();
       this.setTab('dashboard');
     }
-  }
-
-  formatDoseDate(date: Date): string {
-    return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-  }
-
-  formatRawDate(dateStr?: string): string {
-    if (!dateStr) return '';
-    const [y, m, d] = dateStr.split('-');
-    return `${d}/${m}/${y}`;
   }
 }

@@ -1,0 +1,105 @@
+<ion-modal [isOpen]="isOpen" (didDismiss)="dismiss.emit()">
+  <ng-template>
+    <div class="p-6 relative overflow-hidden">
+      <div class="absolute left-0 right-0 top-0 h-2 bg-gradient-to-r from-brand-yellow to-brand-orange"></div>
+      <div class="flex items-start justify-between gap-4 mt-1">
+        <div>
+          <h3 class="text-lg font-bold font-display text-brand-dark">
+            {{ editingChild ? 'Editar Perfil' : 'Cadastrar Perfil' }}
+          </h3>
+          <p class="text-xs text-brand-dark/60 font-semibold mt-0.5">Preencha os dados abaixo</p>
+        </div>
+        <button (click)="dismiss.emit()"
+          class="flex items-center justify-center p-1 hover:bg-neutral-100 rounded-lg text-brand-dark/40">
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </div>
+
+      <form [formGroup]="childForm" (ngSubmit)="submit()" class="mt-4 space-y-4 text-xs font-semibold">
+        <div>
+          <label class="block text-xs font-bold text-brand-dark/80 mb-1">Nome Completo</label>
+          <input type="text" formControlName="name" placeholder="Ex: Sofia Mendes"
+            class="w-full px-3 py-2 border border-brand-dark/10 rounded-xl focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
+          @if (childForm.controls['name'].touched && childForm.controls['name'].invalid) {
+            <span class="text-[10px] text-rose-500 font-bold block mt-0.5">Nome é obrigatório (mín. 2 caracteres).</span>
+          }
+        </div>
+
+        <div class="grid grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-xs font-bold text-brand-dark/80 mb-1">Data de Nascimento</label>
+            <input type="date" formControlName="birthDate"
+              class="w-full px-3 py-2 border border-brand-dark/10 rounded-xl focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
+            @if (childForm.controls['birthDate'].touched && childForm.controls['birthDate'].invalid) {
+              <span class="text-[10px] text-rose-500 font-bold block mt-0.5">Data é obrigatória.</span>
+            }
+          </div>
+          <div>
+            <span class="block text-xs font-bold text-brand-dark/80 mb-1">Gênero</span>
+            <div class="grid grid-cols-2 gap-2 mt-0.5">
+              <label class="flex items-center justify-center gap-1.5 p-2 bg-neutral-50 hover:bg-neutral-100 border border-brand-dark/10 rounded-xl cursor-pointer">
+                <input type="radio" value="M" formControlName="gender" class="text-brand-green focus:ring-0">
+                <span class="font-bold text-brand-dark">Masc.</span>
+              </label>
+              <label class="flex items-center justify-center gap-1.5 p-2 bg-neutral-50 hover:bg-neutral-100 border border-brand-dark/10 rounded-xl cursor-pointer">
+                <input type="radio" value="F" formControlName="gender" class="text-brand-green focus:ring-0">
+                <span class="font-bold text-brand-dark">Fem.</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <span class="block text-xs font-bold text-brand-dark/80 mb-1.5">Ícone de Identificação</span>
+          <div class="flex items-center gap-2 overflow-x-auto p-2 bg-neutral-50 border border-brand-dark/10 rounded-2xl">
+            @for (emoji of avatarOptions; track emoji) {
+              <button type="button"
+                (click)="childForm.controls['avatar'].setValue(emoji)"
+                [class]="childForm.controls['avatar'].value === emoji ? 'bg-brand-yellow/30 border-brand-orange ring-2 ring-brand-orange/30 scale-110' : 'bg-white border-transparent hover:border-brand-dark/20'"
+                class="text-2xl p-2 rounded-xl border flex-shrink-0 transition-all font-semibold">
+                {{ emoji }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-brand-dark/5 space-y-3.5">
+          <h4 class="font-extrabold text-[11px] text-brand-dark/60 uppercase tracking-wider">Metadados Físicos (opcional)</h4>
+          <div class="grid grid-cols-3 gap-3.5">
+            <div>
+              <label class="block text-[11px] text-brand-dark/60 mb-0.5">Grupo Sanguíneo</label>
+              <select formControlName="bloodType" class="w-full px-2.5 py-2 border border-brand-dark/10 rounded-xl bg-neutral-50/50">
+                <option value="">N/A</option>
+                <option value="A+">A+</option><option value="A-">A-</option>
+                <option value="B+">B+</option><option value="B-">B-</option>
+                <option value="AB+">AB+</option><option value="AB-">AB-</option>
+                <option value="O+">O+</option><option value="O-">O-</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] text-brand-dark/60 mb-0.5">Peso (kg)</label>
+              <input type="number" step="0.1" formControlName="weight" placeholder="Ex: 8.5"
+                class="w-full px-2.5 py-2 border border-brand-dark/10 rounded-xl bg-neutral-50/50" />
+            </div>
+            <div>
+              <label class="block text-[11px] text-brand-dark/60 mb-0.5">Altura (cm)</label>
+              <input type="number" step="1" formControlName="height" placeholder="Ex: 72"
+                class="w-full px-2.5 py-2 border border-brand-dark/10 rounded-xl bg-neutral-50/50" />
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-brand-dark/5 flex items-center justify-end gap-3">
+          <button type="button" (click)="dismiss.emit()"
+            class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200/80 text-brand-dark font-bold rounded-xl transition">
+            Cancelar
+          </button>
+          <button type="submit"
+            class="px-5 py-2 bg-brand-green hover:bg-brand-green/90 text-white font-extrabold rounded-xl shadow-md transition">
+            {{ editingChild ? 'Salvar Edições' : 'Criar Caderneta' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</ion-modal>

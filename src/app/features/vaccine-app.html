@@ -1,67 +1,13 @@
 <ion-content>
-  
-  <!-- Header / Navigation Bar -->
-  <header id="vax-main-header" class="sticky top-0 z-40 bg-white border-b border-brand-dark/5 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
-      
-      <!-- Brand Logo & Title -->
-      <div id="vax-brand-logo-group" class="flex items-center gap-2.5">
-        <div class="w-10 h-10 rounded-xl bg-brand-green flex items-center justify-center shadow-md animate-bounce duration-1000">
-          <ion-icon class="text-white text-2xl" name="shield-half"></ion-icon>
-        </div>
-        <div>
-          <h1 class="text-xl font-bold tracking-tight text-brand-dark font-display leading-tight">Caderneta Infantil</h1>
-          <p class="text-[10px] text-brand-dark/60 font-semibold tracking-wider uppercase">Cyrrus Saúde Digital</p>
-        </div>
-      </div>
+  <app-header
+    [activeTab]="activeTab()"
+    (tabChange)="setTab($event)"
+    (addChild)="openAddChildModal()"
+    (resetData)="resetDatabase()">
+  </app-header>
 
-      <!-- Quick Actions (Desktop Menu) -->
-      <div id="vax-desktop-menu" class="hidden md:flex items-center gap-1.5 bg-brand-dark/5 p-1 rounded-full">
-        <button (click)="setTab('dashboard')"
-          [class]="activeTab() === 'dashboard' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
-          class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
-          <ion-icon class="text-sm" name="grid"></ion-icon>
-          Painel
-        </button>
-        <button (click)="setTab('timeline')"
-          [class]="activeTab() === 'timeline' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
-          class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
-          <ion-icon class="text-sm" name="book"></ion-icon>
-          Caderneta
-        </button>
-        <button (click)="setTab('campaigns')"
-          [class]="activeTab() === 'campaigns' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
-          class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
-          <ion-icon class="text-sm" name="megaphone"></ion-icon>
-          Campanhas
-        </button>
-        <button (click)="setTab('children')"
-          [class]="activeTab() === 'children' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
-          class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
-          <ion-icon class="text-sm" name="people"></ion-icon>
-          Meus Filhos
-        </button>
-      </div>
-
-      <div id="vax-header-actions" class="flex items-center gap-2">
-        <button (click)="resetDatabase()"
-          title="Redefinir Dados"
-          class="flex items-center justify-center p-2 rounded-lg text-brand-dark/60 hover:text-brand-dark hover:bg-brand-dark/5 transition">
-          <ion-icon name="refresh"></ion-icon>
-        </button>
-        <button (click)="openAddChildModal()"
-          class="flex items-center gap-1.5 px-3 py-1.5 bg-brand-green text-white font-medium text-xs rounded-lg hover:shadow-md transition">
-          <ion-icon class="text-sm" name="add"></ion-icon>
-          <span class="hidden sm:inline">Adicionar Filho</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Content -->
   <main id="vax-main-content" class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
-    
-    <!-- Child Selector Section -->
+
     <section class="mb-6">
       <div class="flex items-center justify-between mb-3">
         <h2 class="text-sm font-bold uppercase tracking-wider text-brand-dark/50 flex items-center gap-1.5">
@@ -92,7 +38,6 @@
       </div>
     </section>
 
-    <!-- Empty / Active State -->
     @if (!vaxService.activeChild()) {
       <div class="text-center py-12 px-4 bg-white rounded-3xl border border-brand-dark/5 shadow-sm max-w-xl mx-auto">
         <span class="text-6xl mb-4">🧸</span>
@@ -104,7 +49,6 @@
         </button>
       </div>
     } @else {
-      <!-- Active Child Stats Bar -->
       <section id="vax-active-child-stats-bar" class="mb-6 bg-white rounded-2xl p-5 border border-brand-dark/5 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative overflow-hidden">
         <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-brand-green"></div>
 
@@ -149,7 +93,6 @@
         </div>
       </section>
 
-      <!-- Tab: Dashboard -->
       @if (activeTab() === 'dashboard') {
         <app-dashboard-tab
           [overdueDoses]="overdueDosesForActiveChild()"
@@ -159,7 +102,6 @@
         </app-dashboard-tab>
       }
 
-      <!-- Tab: Timeline -->
       @if (activeTab() === 'timeline') {
         <app-timeline-tab
           [filteredGroups]="filteredVaccineGroups()"
@@ -173,12 +115,10 @@
         </app-timeline-tab>
       }
 
-      <!-- Tab: Campaigns -->
       @if (activeTab() === 'campaigns') {
         <app-campaigns-tab></app-campaigns-tab>
       }
 
-      <!-- Tab: Children -->
       @if (activeTab() === 'children') {
         <app-children-tab
           (addChild)="openAddChildModal()"
@@ -189,7 +129,6 @@
       }
     }
   </main>
-
 </ion-content>
 
 <ion-footer class="md:hidden">
@@ -213,217 +152,18 @@
   </ion-tab-bar>
 </ion-footer>
 
-<ion-modal [isOpen]="selectedVaccineForDetail() !== null" (didDismiss)="selectedVaccineForDetail.set(null)">
-  <ng-template>
-      @if (selectedVaccineForDetail(); as vDetail) {
-        <div class="p-6 relative overflow-hidden">
-          <div class="absolute left-0 right-0 top-0 h-2 bg-gradient-to-r from-brand-green to-brand-orange"></div>
-        <div class="flex items-start justify-between gap-4 mt-1.5">
-          <div>
-            <h3 class="text-lg font-extrabold leading-tight tracking-tight text-brand-dark font-display">{{ vDetail.name }}</h3>
-            <p class="text-xs text-brand-dark/60 font-semibold tracking-wide uppercase mt-0.5">{{ vDetail.fullName }}</p>
-          </div>
-          <button (click)="selectedVaccineForDetail.set(null)"
-            class="flex items-center justify-center p-1 hover:bg-neutral-100 rounded-lg text-brand-dark/40">
-            <ion-icon name="close"></ion-icon>
-          </button>
-        </div>
-        <div class="mt-5 space-y-4 text-xs font-semibold">
-          <div>
-            <p class="text-[10px] uppercase font-bold text-brand-dark/40 tracking-wider">Patologias Prevenidas</p>
-            <p class="text-sm font-bold text-brand-green mt-0.5 flex items-center gap-1">
-              <ion-icon class="text-sm leading-none" name="shield"></ion-icon>
-              {{ vDetail.diseasePrevented }}
-            </p>
-          </div>
-          <div>
-            <p class="text-[10px] uppercase font-bold text-brand-dark/40 tracking-wider">Informações Gerais</p>
-            <p class="text-brand-dark/80 mt-1 leading-relaxed font-normal bg-neutral-50 p-3 rounded-xl border border-brand-dark/5">
-              {{ vDetail.description }}
-            </p>
-          </div>
-          @if (vDetail.sideEffects) {
-            <div>
-              <p class="text-[10px] uppercase font-bold text-brand-dark/40 tracking-wider">Efeitos Colaterais</p>
-              <p class="text-brand-dark/70 font-medium leading-relaxed mt-1 p-3 bg-brand-orange/5 border border-brand-orange/15 rounded-xl">
-                <span class="text-sm">🤒</span>
-                <span>{{ vDetail.sideEffects }}</span>
-              </p>
-            </div>
-          }
-        </div>
-        <div class="mt-6 pt-4 border-t border-brand-dark/5 flex justify-end">
-          <button (click)="selectedVaccineForDetail.set(null)"
-            class="px-5 py-2 bg-brand-dark hover:bg-brand-dark/90 text-white font-bold text-xs rounded-xl shadow transition">
-            Fechar
-          </button>
-        </div>
-      </div>
-    }
-  </ng-template>
-</ion-modal>
+<app-vaccine-detail-modal
+  [vaccine]="selectedVaccineForDetail()"
+  (dismiss)="selectedVaccineForDetail.set(null)">
+</app-vaccine-detail-modal>
 
-<ion-modal [isOpen]="vaccineToLog() !== null" (didDismiss)="vaccineToLog.set(null)">
-  <ng-template>
-      @if (vaccineToLog(); as logData) {
-        <div class="p-6 relative overflow-hidden">
-          <div class="absolute left-0 right-0 top-0 h-2 bg-brand-green"></div>
-        <div class="flex items-start justify-between gap-4 mt-1">
-          <div>
-            <h3 class="text-base font-bold font-display text-brand-dark">Registrar Aplicação</h3>
-            <p class="text-[11px] text-brand-dark/60 font-semibold mt-0.5">{{ logData.vaccine.name }} ({{ logData.dose.doseName }})</p>
-          </div>
-          <button (click)="vaccineToLog.set(null)"
-            class="flex items-center justify-center p-1 hover:bg-neutral-100 rounded-lg text-brand-dark/40">
-            <ion-icon name="close"></ion-icon>
-          </button>
-        </div>
-        <form [formGroup]="vaxLogForm" (ngSubmit)="saveDoseLog()" class="mt-4 space-y-4 text-xs font-semibold">
-          <div>
-            <label class="block text-xs font-bold text-brand-dark/80 mb-1">Data da Aplicação</label>
-            <input type="date" formControlName="appliedDate"
-              class="w-full px-3 py-2 border border-brand-dark/10 rounded-xl focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
-            @if (vaxLogForm.controls['appliedDate'].touched && vaxLogForm.controls['appliedDate'].invalid) {
-              <span class="text-[10px] text-rose-500 font-bold block mt-0.5">Defina uma data válida.</span>
-            }
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-brand-dark/80 mb-1">Local</label>
-            <input type="text" formControlName="appliedPlace" placeholder="Ex: UBS Central"
-              class="w-full px-3 py-2 border border-brand-dark/10 rounded-xl focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
-          </div>
-          <div class="grid grid-cols-2 gap-3.5">
-            <div>
-              <label class="block text-xs font-bold text-brand-dark/80 mb-1">Lote</label>
-              <input type="text" formControlName="lotNumber" placeholder="Ex: BCG443-P"
-                class="w-full px-3 py-2 border border-brand-dark/10 rounded-xl focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-brand-dark/80 mb-1">Vacinador</label>
-              <input type="text" formControlName="vacinatorName" placeholder="Ex: Enfª. Sandra"
-                class="w-full px-3 py-2 border border-brand-dark/10 rounded-xl focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
-            </div>
-          </div>
-          <div class="pt-4 border-t border-brand-dark/5 flex items-center justify-end gap-3">
-            <button type="button" (click)="vaccineToLog.set(null)"
-              class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200/80 text-brand-dark font-bold rounded-xl transition">
-              Cancelar
-            </button>
-            <button type="submit"
-              class="px-5 py-2 bg-brand-green hover:bg-brand-green/90 text-white font-extrabold rounded-xl shadow-md transition">
-              Salvar Registro
-            </button>
-          </div>
-        </form>
-      </div>
-    }
-  </ng-template>
-</ion-modal>
+<app-vaccine-log-modal
+  [logData]="vaccineToLog()"
+  (dismiss)="vaccineToLog.set(null)">
+</app-vaccine-log-modal>
 
-<ion-modal [isOpen]="showChildModal()" (didDismiss)="showChildModal.set(false)">
-  <ng-template>
-      @if (showChildModal()) {
-        <div class="p-6 relative overflow-hidden">
-          <div class="absolute left-0 right-0 top-0 h-2 bg-gradient-to-r from-brand-yellow to-brand-orange"></div>
-        <div class="flex items-start justify-between gap-4 mt-1">
-          <div>
-            <h3 class="text-lg font-bold font-display text-brand-dark">
-              {{ editingChild() ? 'Editar Perfil' : 'Cadastrar Perfil' }}
-            </h3>
-            <p class="text-xs text-brand-dark/60 font-semibold mt-0.5">Preencha os dados abaixo</p>
-          </div>
-          <button (click)="showChildModal.set(false)"
-            class="flex items-center justify-center p-1 hover:bg-neutral-100 rounded-lg text-brand-dark/40">
-            <ion-icon name="close"></ion-icon>
-          </button>
-        </div>
-
-        <form [formGroup]="childForm" (ngSubmit)="saveChild()" class="mt-4 space-y-4 text-xs font-semibold">
-          <div>
-            <label class="block text-xs font-bold text-brand-dark/80 mb-1">Nome Completo</label>
-            <input type="text" formControlName="name" placeholder="Ex: Sofia Mendes"
-              class="w-full px-3 py-2 border border-brand-dark/10 rounded-xl focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
-            @if (childForm.controls['name'].touched && childForm.controls['name'].invalid) {
-              <span class="text-[10px] text-rose-500 font-bold block mt-0.5">Nome é obrigatório (mín. 2 caracteres).</span>
-            }
-          </div>
-
-          <div class="grid grid-cols-2 gap-3.5">
-            <div>
-              <label class="block text-xs font-bold text-brand-dark/80 mb-1">Data de Nascimento</label>
-              <input type="date" formControlName="birthDate"
-                class="w-full px-3 py-2 border border-brand-dark/10 rounded-xl focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
-              @if (childForm.controls['birthDate'].touched && childForm.controls['birthDate'].invalid) {
-                <span class="text-[10px] text-rose-500 font-bold block mt-0.5">Data é obrigatória.</span>
-              }
-            </div>
-            <div>
-              <span class="block text-xs font-bold text-brand-dark/80 mb-1">Gênero</span>
-              <div class="grid grid-cols-2 gap-2 mt-0.5">
-                <label class="flex items-center justify-center gap-1.5 p-2 bg-neutral-50 hover:bg-neutral-100 border border-brand-dark/10 rounded-xl cursor-pointer">
-                  <input type="radio" value="M" formControlName="gender" class="text-brand-green focus:ring-0">
-                  <span class="font-bold text-brand-dark">Masc.</span>
-                </label>
-                <label class="flex items-center justify-center gap-1.5 p-2 bg-neutral-50 hover:bg-neutral-100 border border-brand-dark/10 rounded-xl cursor-pointer">
-                  <input type="radio" value="F" formControlName="gender" class="text-brand-green focus:ring-0">
-                  <span class="font-bold text-brand-dark">Fem.</span>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <span class="block text-xs font-bold text-brand-dark/80 mb-1.5">Ícone de Identificação</span>
-            <div class="flex items-center gap-2 overflow-x-auto p-2 bg-neutral-50 border border-brand-dark/10 rounded-2xl">
-              @for (emoji of avatarOptions; track emoji) {
-                <button type="button"
-                  (click)="childForm.controls['avatar'].setValue(emoji)"
-                  [class]="childForm.controls['avatar'].value === emoji ? 'bg-brand-yellow/30 border-brand-orange ring-2 ring-brand-orange/30 scale-110' : 'bg-white border-transparent hover:border-brand-dark/20'"
-                  class="text-2xl p-2 rounded-xl border flex-shrink-0 transition-all font-semibold">
-                  {{ emoji }}
-                </button>
-              }
-            </div>
-          </div>
-
-          <div class="pt-2 border-t border-brand-dark/5 space-y-3.5">
-            <h4 class="font-extrabold text-[11px] text-brand-dark/60 uppercase tracking-wider">Metadados Físicos (opcional)</h4>
-            <div class="grid grid-cols-3 gap-3.5">
-              <div>
-                <label class="block text-[11px] text-brand-dark/60 mb-0.5">Grupo Sanguíneo</label>
-                <select formControlName="bloodType" class="w-full px-2.5 py-2 border border-brand-dark/10 rounded-xl bg-neutral-50/50">
-                  <option value="">N/A</option>
-                  <option value="A+">A+</option><option value="A-">A-</option>
-                  <option value="B+">B+</option><option value="B-">B-</option>
-                  <option value="AB+">AB+</option><option value="AB-">AB-</option>
-                  <option value="O+">O+</option><option value="O-">O-</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-[11px] text-brand-dark/60 mb-0.5">Peso (kg)</label>
-                <input type="number" step="0.1" formControlName="weight" placeholder="Ex: 8.5"
-                  class="w-full px-2.5 py-2 border border-brand-dark/10 rounded-xl bg-neutral-50/50" />
-              </div>
-              <div>
-                <label class="block text-[11px] text-brand-dark/60 mb-0.5">Altura (cm)</label>
-                <input type="number" step="1" formControlName="height" placeholder="Ex: 72"
-                  class="w-full px-2.5 py-2 border border-brand-dark/10 rounded-xl bg-neutral-50/50" />
-              </div>
-            </div>
-          </div>
-
-          <div class="pt-4 border-t border-brand-dark/5 flex items-center justify-end gap-3">
-            <button type="button" (click)="showChildModal.set(false)"
-              class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200/80 text-brand-dark font-bold rounded-xl transition">
-              Cancelar
-            </button>
-            <button type="submit"
-              class="px-5 py-2 bg-brand-green hover:bg-brand-green/90 text-white font-extrabold rounded-xl shadow-md transition">
-              {{ editingChild() ? 'Salvar Edições' : 'Criar Caderneta' }}
-            </button>
-          </div>
-        </form>
-      </div>
-    }
-  </ng-template>
-</ion-modal>
+<app-child-form-modal
+  [isOpen]="showChildModal()"
+  [editingChild]="editingChild()"
+  (dismiss)="showChildModal.set(false)">
+</app-child-form-modal>
