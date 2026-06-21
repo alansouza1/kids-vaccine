@@ -1,0 +1,54 @@
+@let currentChild = vaxService.activeChild()!;
+
+<div class="bg-gradient-to-r from-brand-green/30 via-brand-yellow/30 to-brand-orange/30 p-6 rounded-3xl border border-brand-green/10 text-center max-w-3xl mx-auto space-y-2">
+  <span class="text-5xl">📢</span>
+  <h3 class="text-xl font-bold font-display text-brand-dark">Campanhas Governamentais de Saúde Coletiva</h3>
+  <p class="text-xs text-brand-dark/80 max-w-xl mx-auto leading-relaxed">
+    Mostramos aqui as principais ações de vacinação comunitária vigentes.
+  </p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  @for (campaign of vaxService.campaigns(); track campaign.id) {
+    @let ageMonths = currentChild.getAgeInMonths();
+    @let isMatched = campaign.isAgeInRange(ageMonths);
+
+    <div class="bg-white rounded-3xl border border-brand-dark/5 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between">
+      <div class="h-32 bg-gray-200 relative">
+        <img [src]="campaign.bannerImage" alt="{{ campaign.title }}" referrerpolicy="no-referrer" class="w-full h-full object-cover">
+        @if (isMatched) {
+          <div class="absolute inset-0 bg-brand-green/10 backdrop-blur-[1px] pointer-events-none"></div>
+          <div class="absolute top-3 left-3 bg-brand-green text-white font-bold text-[9px] uppercase tracking-wider px-2 py-0.5 rounded shadow">
+            Recomendada para {{ currentChild.name }}
+          </div>
+        } @else {
+          <div class="absolute top-3 left-3 bg-brand-dark/60 text-white font-semibold text-[9px] px-2 py-0.5 rounded">Geral</div>
+        }
+      </div>
+
+      <div class="p-5 flex-grow flex flex-col justify-between">
+        <div>
+          <h4 class="font-extrabold text-sm text-brand-dark font-display leading-snug">{{ campaign.title }}</h4>
+          <p class="text-[11px] text-brand-dark/70 mt-2 leading-relaxed">{{ campaign.description }}</p>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-brand-dark/5 space-y-2 text-[11px] text-brand-dark/70 font-semibold bg-neutral-50/50 p-3 rounded-xl">
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <ion-icon class="text-sm text-brand-green" name="people-outline"></ion-icon>
+            <span>Público: <span class="font-normal text-brand-dark/80">{{ campaign.targetAgeText }}</span></span>
+          </div>
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <ion-icon class="text-sm text-brand-orange" name="calendar"></ion-icon>
+            <span>Período: <span class="font-normal text-brand-dark/80">{{ formatRawDate(campaign.startDate) }} até {{ formatRawDate(campaign.endDate) }}</span></span>
+          </div>
+          @if (isMatched) {
+            <div class="flex items-start gap-1 p-2 bg-brand-green/10 border border-brand-green/20 rounded-lg text-brand-green">
+              <ion-icon class="text-[14px] mt-0.5" name="checkmark-circle"></ion-icon>
+              <p class="text-[10px] font-bold">{{ currentChild.name }} está qualificado(a)!</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

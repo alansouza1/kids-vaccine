@@ -1,0 +1,53 @@
+<button type="button" (click)="!showActions && select.emit(child.id)"
+  [class]="isActive ? 'border-brand-green bg-white shadow-md ring-2 ring-brand-green/30' : 'border-black/[0.05] bg-white/70 hover:bg-white hover:border-brand-green/30 shadow-sm'"
+  class="p-4 rounded-2xl border transition-all duration-200 cursor-pointer relative overflow-hidden group text-left w-full block">
+
+  <div [class]="isActive ? 'bg-brand-green/5' : 'bg-transparent'"
+    class="absolute inset-0 transition-colors pointer-events-none"></div>
+
+  <div class="flex items-start gap-3.5 relative z-10">
+    <span class="text-4xl select-none filter drop-shadow bg-brand-light w-14 h-14 rounded-xl flex items-center justify-center p-2">
+      {{ child.avatar }}
+    </span>
+
+    <div class="flex-grow">
+      <div class="flex items-center gap-1.5">
+        <h3 class="font-bold text-base text-brand-dark tracking-tight">{{ child.name }}</h3>
+        @if (child.gender === 'F') {
+          <span class="w-2.5 h-2.5 rounded-full bg-pink-400" title="Feminino"></span>
+        } @else {
+          <span class="w-2.5 h-2.5 rounded-full bg-blue-400" title="Masculino"></span>
+        }
+      </div>
+      <p class="text-xs text-brand-dark/70 font-semibold mt-0.5">{{ child.getFormattedAge() }}</p>
+      <p class="text-[10px] text-brand-dark/50 font-medium font-sans">Nascimento: {{ child.getFormattedBirthDate() }}</p>
+    </div>
+
+    @if (isActive && !showActions) {
+      <div class="w-6 h-6 rounded-full bg-brand-green flex items-center justify-center text-white shadow">
+        <ion-icon class="text-base font-bold" name="checkmark"></ion-icon>
+      </div>
+    }
+  </div>
+
+  @if (showActions) {
+    <div class="mt-5 pt-3.5 border-t border-brand-dark/5 flex items-center justify-between gap-2.5">
+      <button (click)="delete.emit(child.id); $event.stopPropagation()"
+        class="flex items-center justify-center gap-1 px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100/70 hover:text-rose-700 rounded-lg text-[11px] font-bold transition">
+        <ion-icon class="text-xs" name="trash"></ion-icon> Remover
+      </button>
+      <div class="flex items-center gap-2">
+        <button (click)="edit.emit(child); $event.stopPropagation()"
+          class="flex items-center justify-center gap-1 px-3 py-1.5 bg-neutral-100 text-brand-dark hover:bg-neutral-200/70 rounded-lg text-[11px] font-bold transition">
+          <ion-icon class="text-xs" name="create"></ion-icon> Editar
+        </button>
+        <button (click)="select.emit(child.id); $event.stopPropagation()"
+          [disabled]="isActive"
+          class="flex items-center justify-center gap-1 px-3 py-1.5 bg-brand-green disabled:bg-neutral-100 text-white disabled:text-brand-dark/30 rounded-lg text-[11px] font-bold transition">
+          <ion-icon class="text-xs" name="checkmark"></ion-icon>
+          {{ isActive ? 'Selecionado' : 'Selecionar' }}
+        </button>
+      </div>
+    </div>
+  }
+</button>

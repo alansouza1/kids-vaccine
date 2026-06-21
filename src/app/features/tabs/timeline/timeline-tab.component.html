@@ -1,0 +1,58 @@
+<div class="bg-white p-4 sm:p-5 rounded-3xl border border-brand-dark/5 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+  <div class="flex items-center gap-1 flex-wrap w-full md:w-auto">
+    <button (click)="activeFilterChange.emit('all')"
+      [class]="activeFilter === 'all' ? 'bg-brand-dark text-white font-bold' : 'bg-neutral-50 text-brand-dark/70 border border-brand-dark/5 hover:bg-brand-dark/5'"
+      class="px-4 py-1.5 rounded-full text-xs transition">
+      Todas ({{ vaxService.VACCINES.length }})
+    </button>
+    <button (click)="activeFilterChange.emit('applied')"
+      [class]="activeFilter === 'applied' ? 'bg-brand-green text-white font-bold' : 'bg-neutral-50 text-brand-dark/70 border border-brand-dark/5 hover:bg-brand-dark/5'"
+      class="px-4 py-1.5 rounded-full text-xs transition">
+      Aplicadas/Ok
+    </button>
+    <button (click)="activeFilterChange.emit('overdue')"
+      [class]="activeFilter === 'overdue' ? 'bg-rose-500 text-white font-bold' : 'bg-neutral-50 text-brand-dark/70 border border-brand-dark/5 hover:bg-brand-dark/5'"
+      class="px-4 py-1.5 rounded-full text-xs transition">
+      Em Atraso
+    </button>
+    <button (click)="activeFilterChange.emit('pending')"
+      [class]="activeFilter === 'pending' ? 'bg-brand-orange text-brand-dark font-extrabold' : 'bg-neutral-50 text-brand-dark/70 border border-brand-dark/5 hover:bg-brand-dark/5'"
+      class="px-4 py-1.5 rounded-full text-xs transition">
+      Agendadas
+    </button>
+  </div>
+
+  <div class="relative w-full md:max-w-xs flex-shrink-0">
+    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-brand-dark/40">
+      <ion-icon class="text-base" name="search"></ion-icon>
+    </span>
+    <input type="text"
+      [value]="searchQuery"
+      (input)="searchQueryChange.emit($any($event.target).value)"
+      placeholder="Buscar vacina, doença ou sigla..."
+      class="w-full pl-9 pr-4 py-2 border border-brand-dark/10 rounded-xl text-xs focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
+  </div>
+</div>
+
+@if (filteredGroups.length === 0) {
+  <div class="text-center py-12 px-4 bg-white rounded-3xl border border-brand-dark/5 shadow-sm max-w-md mx-auto">
+    <span class="text-4xl block mb-2">🧸</span>
+    <h3 class="font-bold text-sm text-brand-dark">Nenhum resultado encontrado</h3>
+    <p class="text-xs text-brand-dark/60 mt-1">Tente ajustar a busca ou desabilitar os filtros.</p>
+    <button (click)="searchQueryChange.emit(''); activeFilterChange.emit('all')"
+      class="mt-4 px-4 py-1.5 bg-brand-green text-white text-xs font-bold rounded-lg hover:shadow-md transition">
+      Limpar Filtros
+    </button>
+  </div>
+} @else {
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (group of filteredGroups; track group.vaccine.id) {
+      <app-vaccine-card
+        [group]="group"
+        (applyDose)="applyDose.emit($event)"
+        (undoDose)="undoDose.emit($event)"
+        (showDetail)="showDetail.emit($event)">
+      </app-vaccine-card>
+    }
+  </div>
+}

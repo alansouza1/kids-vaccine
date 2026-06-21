@@ -1,11 +1,9 @@
 import { Injectable, computed, signal, effect } from '@angular/core';
-import { 
-  Child, 
-  VaccinePreset, 
-  VaccinationRecord, 
-  DerivedDoseStatus, 
-  ChildVaccineGroup, 
-  VaccineCampaign 
+import { Child, ChildData } from '../models/child.model';
+import { VaccinationRecord, VaccinationRecordData } from '../models/vaccination-record.model';
+import {
+  VaccinePreset, DosePreset, DerivedDoseStatus,
+  ChildVaccineGroup, VaccineCampaign, VaccinePresetData, VaccineCampaignData
 } from '../models/vaccine.model';
 
 @Injectable({
@@ -13,7 +11,7 @@ import {
 })
 export class VaccineService {
   // Static Vaccine Preset Database (based on the Brazilian PNI - Programa Nacional de Imunizações)
-  readonly VACCINES: VaccinePreset[] = [
+  readonly VACCINES: VaccinePresetData[] = [
     {
       id: 'bcg',
       name: 'BCG',
@@ -203,8 +201,8 @@ export class VaccineService {
     });
 
     return this.VACCINES.map(vaccine => {
+      const vaccinePreset = new VaccinePreset(vaccine);
       const derivedDoses: DerivedDoseStatus[] = vaccine.doses.map(dose => {
-        // Calculate dynamic expected date for each dose base on baby's birthday
         const scheduledDate = new Date(birth);
         scheduledDate.setMonth(scheduledDate.getMonth() + dose.ageMonths);
 
@@ -216,17 +214,15 @@ export class VaccineService {
         if (record && record.appliedDate) {
           status = 'applied';
         } else {
-          // Grace period check (defaults to 1 month from expected date)
           const gracePeriod = dose.gracePeriodMonths || 1;
           const limitDate = new Date(scheduledDate);
           limitDate.setMonth(limitDate.getMonth() + gracePeriod);
-
           if (now > limitDate) {
             status = 'overdue';
           }
         }
 
-        return {
+        return new DerivedDoseStatus({
           doseId: dose.id,
           doseName: dose.name,
           ageMonths: dose.ageMonths,
@@ -236,18 +232,18 @@ export class VaccineService {
           appliedPlace: record?.appliedPlace,
           lotNumber: record?.lotNumber,
           vacinatorName: record?.vacinatorName
-        };
+        });
       });
 
       const isFullyApplied = derivedDoses.every(d => d.status === 'applied');
       const hasOverdue = derivedDoses.some(d => d.status === 'overdue');
 
-      return {
-        vaccine,
+      return new ChildVaccineGroup({
+        vaccine: vaccinePreset,
         doses: derivedDoses,
         isFullyApplied,
         hasOverdue
-      };
+      });
     });
   });
 
@@ -292,9 +288,9 @@ export class VaccineService {
     const child = this.activeChild();
     if (!child) return [];
 
-    const ageInMonths = this.calculateAgeInMonths(child.birthDate);
+    const ageInMonths = child.getAgeInMonths();
     return this.campaigns().filter(campaign => {
-      return ageInMonths >= campaign.minAgeMonths && ageInMonths <= campaign.maxAgeMonths;
+      return campaign.isAgeInRange(ageInMonths);
     });
   });
 
@@ -378,10 +374,11 @@ export class VaccineService {
     const localActive = localStorage.getItem('vax_active_id');
 
     if (localChildren && localRecords && localCampaigns) {
-      this.children.set(JSON.parse(localChildren));
-      this.records.set(JSON.parse(localRecords));
-      this.campaigns.set(JSON.parse(localCampaigns));
-      const activeId = localActive || (JSON.parse(localChildren)[0]?.id || null);
+      const parsedChildren: any[] = JSON.parse(localChildren);
+      this.children.set(parsedChildren.map((c: any) => new Child(c)));
+      this.records.set(JSON.parse(localRecords).map((r: any) => new VaccinationRecord(r)));
+      this.campaigns.set(JSON.parse(localCampaigns).map((c: any) => new VaccineCampaign(c)));
+      const activeId = localActive || (parsedChildren[0]?.id || null);
       this.activeChildId.set(activeId);
     } else {
       this.seedData();
@@ -395,7 +392,7 @@ export class VaccineService {
     const babySofiaBirth = this.getRelativeBirthDateString(14);   // 14 months old (MMR at 12m is overdue)
     const kidGabrielBirth = this.getRelativeBirthDateString(54);  // 4.5 years old (DTP, Varicela, VOP at 4 years might need attention)
 
-    const initialChildren: Child[] = [
+    const initialChildren: ChildData[] = [
       {
         id: 'child_arthur',
         name: 'Arthur Mendes',
@@ -431,7 +428,7 @@ export class VaccineService {
     // 2. Default vaccination records applied
     // Arthur (3 months old) has applied: BCG (0m), Hepatitis B (0m), and Pneumocócica 1ª dose (2m).
     // Pentavalente 1st dose (2m) and VIP 1st dose (2m) are overdue/pending!
-    const initialRecords: VaccinationRecord[] = [
+    const initialRecords: VaccinationRecordData[] = [
       {
         id: 'record_arthur_bcg_du',
         childId: 'child_arthur',
@@ -526,7 +523,7 @@ export class VaccineService {
     });
 
     // 3. Campaigns List (Scenario 3)
-    const initialCampaigns: VaccineCampaign[] = [
+    const initialCampaigns: VaccineCampaignData[] = [
       {
         id: 'camp_influenza',
         title: 'Campanha de Vacinação Contra a Gripe 2026',
@@ -562,9 +559,9 @@ export class VaccineService {
       }
     ];
 
-    this.children.set(initialChildren);
-    this.records.set(initialRecords);
-    this.campaigns.set(initialCampaigns);
+    this.children.set(initialChildren.map(c => new Child(c)));
+    this.records.set(initialRecords.map(r => new VaccinationRecord(r)));
+    this.campaigns.set(initialCampaigns.map(c => new VaccineCampaign(c)));
     this.activeChildId.set('child_arthur');
   }
 
@@ -621,17 +618,12 @@ export class VaccineService {
 
   // Apply a vaccine dose
   applyVaccineDose(record: Omit<VaccinationRecord, 'id'>): void {
-    const id = `record_${record.childId}_${record.vaccineId}_${record.doseId}`;
-    const newRecord: VaccinationRecord = {
-      ...record,
-      id
-    };
+    const newRecord = VaccinationRecord.fromData(record);
 
-    // Replace if exists, or append if new
-    const exists = this.records().some(r => r.id === id);
+    const exists = this.records().some(r => r.id === newRecord.id);
     let updated: VaccinationRecord[];
     if (exists) {
-      updated = this.records().map(r => r.id === id ? newRecord : r);
+      updated = this.records().map(r => r.id === newRecord.id ? newRecord : r);
     } else {
       updated = [...this.records(), newRecord];
     }

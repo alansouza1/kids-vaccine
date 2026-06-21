@@ -1,0 +1,86 @@
+<div class="bg-white rounded-3xl border border-brand-dark/5 shadow-sm hover:shadow-md transition duration-200 overflow-hidden flex flex-col justify-between">
+  
+  <div class="p-5 pb-3">
+    <div class="flex items-start justify-between gap-3">
+      <div>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <h4 class="font-extrabold text-base text-brand-dark font-display">{{ group.vaccine.name }}</h4>
+          @if (group.isFullyApplied) {
+            <app-status-badge status="applied" label="Completo"></app-status-badge>
+          } @else if (group.hasOverdue) {
+            <app-status-badge status="overdue" label="Atrasada"></app-status-badge>
+          }
+        </div>
+        <p class="text-[10px] font-bold text-brand-dark/50 tracking-wide mt-0.5 uppercase">{{ group.vaccine.fullName }}</p>
+      </div>
+      
+      @if (showInfoButton) {
+        <button (click)="showDetail.emit(group.vaccine)"
+          title="Ver bula e efeitos"
+          class="flex items-center justify-center w-7 h-7 bg-brand-dark/5 hover:bg-brand-dark/10 rounded-full transition text-brand-dark/60 hover:text-brand-dark">
+          <ion-icon class="text-sm" name="information-circle"></ion-icon>
+        </button>
+      }
+    </div>
+
+    <p class="text-xs text-brand-dark/70 font-semibold mt-2.5 flex items-start gap-1">
+      <ion-icon class="text-base text-brand-green flex-shrink-0" name="shield"></ion-icon>
+      <span>Previne: <span class="font-normal text-brand-dark/80">{{ group.vaccine.diseasePrevented }}</span></span>
+    </p>
+  </div>
+
+  <div class="flex-grow bg-neutral-50/50 border-t border-b border-brand-dark/5 px-5 py-4 space-y-3.5">
+    @for (dose of group.doses; track dose.doseId) {
+      <div class="flex items-center justify-between gap-4 text-xs font-semibold">
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-bold text-brand-dark">{{ dose.doseName }} </span>
+            <span class="text-[10px] text-brand-dark/50">({{ dose.ageMonths }}m)</span>
+          </div>
+          
+          @if (dose.isApplied) {
+            <p class="text-[10px] text-brand-green font-bold flex items-center gap-0.5 mt-0.5">
+              <ion-icon class="text-[11px] leading-none" name="checkmark-circle"></ion-icon>
+              Aplicada em {{ dose.appliedDate ? (dose.appliedDate.split('-').reverse().join('/')) : '' }}
+            </p>
+          } @else if (dose.isOverdue) {
+            <p class="text-[10px] text-rose-500 font-extrabold flex items-center gap-0.5 mt-0.5">
+              <ion-icon class="text-[11px] leading-none" name="warning"></ion-icon>
+              Atrasada (Prevista: {{ dose.formattedScheduledDate }})
+            </p>
+          } @else {
+            <p class="text-[10px] text-brand-orange flex items-center gap-0.5 mt-0.5">
+              <ion-icon class="text-[11px] leading-none" name="time"></ion-icon>
+              Agendada para: {{ dose.formattedScheduledDate }}
+            </p>
+          }
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          @if (dose.isApplied) {
+            <button (click)="undoDose.emit({ vaccineId: group.vaccine.id, doseId: dose.doseId })"
+              title="Remover registro"
+              class="w-6 h-6 rounded bg-neutral-100 hover:bg-rose-100/70 text-brand-dark hover:text-rose-500 flex items-center justify-center transition border border-brand-dark/5">
+              <ion-icon class="text-xs" name="arrow-undo"></ion-icon>
+            </button>
+            <span class="text-[10px] text-white bg-brand-green/95 px-2 py-0.5 rounded shadow-sm text-center select-none font-bold">Ok</span>
+          } @else {
+            <button (click)="applyDose.emit({ vaccine: group.vaccine, dose })"
+              [class]="dose.isOverdue ? 'bg-rose-500 text-white hover:bg-rose-600 shadow-sm shadow-rose-200' : 'bg-white hover:bg-brand-green hover:text-white border border-brand-dark/10 hover:border-brand-green'"
+              class="px-2.5 py-1 text-[10px] font-bold rounded transition">
+              Aplicar
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="bg-white/60 p-3 text-center">
+    <p class="text-[10px] text-brand-dark/50 font-semibold tracking-wide flex items-center justify-center gap-1">
+      <ion-icon class="text-xs" name="bandage"></ion-icon>
+      Bula recomendada pelo Ministério da Saúde
+    </p>
+  </div>
+
+</div>

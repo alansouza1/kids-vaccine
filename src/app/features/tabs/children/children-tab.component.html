@@ -1,0 +1,24 @@
+<div class="flex items-center justify-between">
+  <div>
+    <h3 class="text-base font-bold text-brand-dark">Gestão Familiar</h3>
+    <p class="text-xs text-brand-dark/60 font-semibold">Adicione, edite ou remova perfis</p>
+  </div>
+  <button (click)="addChild.emit()"
+    class="flex items-center gap-1 px-4 py-2 bg-brand-green text-white text-xs font-bold rounded-xl hover:shadow shadow-sm transition">
+    <ion-icon class="text-sm" name="add"></ion-icon>
+    Adicionar Filho
+  </button>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  @for (kid of vaxService.children(); track kid.id) {
+    <app-child-card
+      [child]="kid"
+      [isActive]="vaxService.activeChildId() === kid.id"
+      [showActions]="true"
+      (select)="selectChild.emit($event)"
+      (edit)="editChild.emit($event)"
+      (delete)="deleteChild.emit($event)">
+    </app-child-card>
+  }
+</div>

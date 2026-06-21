@@ -17,25 +17,25 @@
 
       <!-- Quick Actions (Desktop Menu) -->
       <div id="vax-desktop-menu" class="hidden md:flex items-center gap-1.5 bg-brand-dark/5 p-1 rounded-full">
-        <button id="nav-btn-dash" (click)="setTab('dashboard')"
+        <button (click)="setTab('dashboard')"
           [class]="activeTab() === 'dashboard' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
           class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
           <ion-icon class="text-sm" name="grid"></ion-icon>
           Painel
         </button>
-        <button id="nav-btn-timeline" (click)="setTab('timeline')"
+        <button (click)="setTab('timeline')"
           [class]="activeTab() === 'timeline' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
           class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
           <ion-icon class="text-sm" name="book"></ion-icon>
           Caderneta
         </button>
-        <button id="nav-btn-campaigns" (click)="setTab('campaigns')"
+        <button (click)="setTab('campaigns')"
           [class]="activeTab() === 'campaigns' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
           class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
           <ion-icon class="text-sm" name="megaphone"></ion-icon>
           Campanhas
         </button>
-        <button id="nav-btn-children" (click)="setTab('children')"
+        <button (click)="setTab('children')"
           [class]="activeTab() === 'children' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
           class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
           <ion-icon class="text-sm" name="people"></ion-icon>
@@ -43,744 +43,105 @@
         </button>
       </div>
 
-      <!-- Reset & Helper buttons -->
       <div id="vax-header-actions" class="flex items-center gap-2">
-        <button id="btn-reset-db" (click)="resetDatabase()" 
-          title="Redefinir Dados Fictícios"
+        <button (click)="resetDatabase()"
+          title="Redefinir Dados"
           class="flex items-center justify-center p-2 rounded-lg text-brand-dark/60 hover:text-brand-dark hover:bg-brand-dark/5 transition">
           <ion-icon name="refresh"></ion-icon>
         </button>
-        <button id="btn-add-kid-header" (click)="openAddChildModal()" 
+        <button (click)="openAddChildModal()"
           class="flex items-center gap-1.5 px-3 py-1.5 bg-brand-green text-white font-medium text-xs rounded-lg hover:shadow-md transition">
           <ion-icon class="text-sm" name="add"></ion-icon>
           <span class="hidden sm:inline">Adicionar Filho</span>
         </button>
       </div>
-
     </div>
   </header>
 
-  <!-- Main Body Content Grid -->
+  <!-- Main Content -->
   <main id="vax-main-content" class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
     
-    <!-- Active Child CAROUSEL Selector Section -->
-    <section id="vax-child-selector-section" class="mb-6">
+    <!-- Child Selector Section -->
+    <section class="mb-6">
       <div class="flex items-center justify-between mb-3">
         <h2 class="text-sm font-bold uppercase tracking-wider text-brand-dark/50 flex items-center gap-1.5">
           <ion-icon class="text-xs" name="person"></ion-icon>
-          Selecione a Criança para Acompanhar
+          Selecione a Criança
         </h2>
-        
-        <!-- Children counters info -->
         <span class="text-xs font-semibold text-brand-dark/60">
           {{ vaxService.children().length }} {{ vaxService.children().length === 1 ? 'filho cadastrado' : 'filhos cadastrados' }}
         </span>
       </div>
 
-      <!-- Slider List -->
-      <div id="vax-child-cards-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         @for (kid of vaxService.children(); track kid.id) {
-          <button type="button" [id]="'child-card-' + kid.id" (click)="selectChild(kid.id)"
-            [class]="vaxService.activeChildId() === kid.id ? 'border-brand-green bg-white shadow-md ring-2 ring-brand-green/30' : 'border-black/[0.05] bg-white/70 hover:bg-white hover:border-brand-green/30 shadow-sm'"
-            class="p-4 rounded-2xl border transition-all duration-200 cursor-pointer relative overflow-hidden group text-left w-full block">
-            
-            <!-- Backdrop Accent Shape -->
-            <div [class]="vaxService.activeChildId() === kid.id ? 'bg-brand-green/5' : 'bg-transparent'" 
-              class="absolute inset-0 transition-colors pointer-events-none"></div>
-
-            <div class="flex items-start gap-3.5 relative z-10">
-              <!-- Avatar Emoji -->
-              <span class="text-4xl select-none filter drop-shadow bg-brand-light w-14 h-14 rounded-xl flex items-center justify-center p-2">
-                {{ kid.avatar }}
-              </span>
-
-              <!-- Child General metadata -->
-              <div class="flex-grow">
-                <div class="flex items-center gap-1.5">
-                  <h3 class="font-bold text-base text-brand-dark tracking-tight">{{ kid.name }}</h3>
-                  @if (kid.gender === 'F') {
-                    <span class="w-2.5 h-2.5 rounded-full bg-pink-400" title="Feminino"></span>
-                  } @else {
-                    <span class="w-2.5 h-2.5 rounded-full bg-blue-400" title="Masculino"></span>
-                  }
-                </div>
-                
-                <p class="text-xs text-brand-dark/70 font-semibold mt-0.5">
-                  {{ vaxService.formatFriendlyAge(kid.birthDate) }}
-                </p>
-                <p class="text-[10px] text-brand-dark/50 font-medium font-sans">Nascimento: {{ formatRawDate(kid.birthDate) }}</p>
-              </div>
-
-              <!-- Top right active selection indicator -->
-              @if (vaxService.activeChildId() === kid.id) {
-                <div class="w-6 h-6 rounded-full bg-brand-green flex items-center justify-center text-white shadow">
-                  <ion-icon class="text-base font-bold" name="checkmark"></ion-icon>
-                </div>
-              }
-            </div>
-
-            <!-- Dynamic Child Summary Metrics (Overdue count vs Done progress) -->
-            <div class="mt-4 pt-3 border-t border-brand-dark/5 flex justify-between items-center relative z-10 text-[11px] font-semibold text-brand-dark/80">
-              
-              <!-- Overdue Alert Count -->
-              <div>
-                <!-- We calculate the exact statistics for this specific kid inline using vaccine status loop or simplified count -->
-                @let isArthur = kid.id === 'child_arthur';
-                @let isSofia = kid.id === 'child_sofia';
-                @let isGabriel = kid.id === 'child_gabriel';
-                
-                <!-- Dynamic display of missing doses -->
-                @if (isArthur) {
-                  <span class="flex items-center gap-1 text-brand-orange">
-                    <ion-icon class="text-sm" name="warning"></ion-icon> Pendências
-                  </span>
-                } @else if (isSofia) {
-                  <span class="flex items-center gap-1 text-rose-500 font-bold bg-rose-50 px-1.5 py-0.5 rounded">
-                    <ion-icon class="text-sm text-rose-500" name="alert-circle"></ion-icon> 2 EM ATRASO
-                  </span>
-                } @else if (isGabriel) {
-                  <span class="flex items-center gap-1 text-amber-600">
-                    <ion-icon class="text-sm" name="time"></ion-icon> Reforços Devidos
-                  </span>
-                } @else {
-                  <span class="flex items-center gap-1 text-emerald-600">
-                    <ion-icon name="checkmark-circle" class="text-sm"></ion-icon> Em Dia
-                  </span>
-                }
-              </div>
-
-              <!-- Compact metadata of details -->
-              <div class="text-right text-brand-dark/60 font-sans">
-                Tip. Sanguíneo: <span class="font-bold text-brand-dark">{{ kid.bloodType || 'N/A' }}</span>
-              </div>
-            </div>
-          </button>
+          <app-child-card
+            [child]="kid"
+            [isActive]="vaxService.activeChildId() === kid.id"
+            (select)="selectChild($event)">
+          </app-child-card>
         }
-
-        <!-- Add Empty Child Suggestion Card if total is 0 -->
         @if (vaxService.children().length === 0) {
-          <button type="button" id="vax-empty-children-prompt" (click)="openAddChildModal()" 
-            class="p-6 rounded-2xl border border-dashed border-brand-dark/20 flex flex-col items-center justify-center text-center cursor-pointer hover:border-brand-green/80 hover:bg-brand-green/5 transition duration-200 text-left w-full block">
+          <button type="button" (click)="openAddChildModal()"
+            class="p-6 rounded-2xl border border-dashed border-brand-dark/20 flex flex-col items-center justify-center text-center cursor-pointer hover:border-brand-green/80 hover:bg-brand-green/5 transition duration-200">
             <ion-icon class="text-3xl text-brand-dark/40 mb-2" name="add-circle-outline"></ion-icon>
             <h3 class="font-bold text-sm text-brand-dark">Sem crianças cadastradas</h3>
-            <p class="text-xs text-brand-dark/60 mt-1">Clique aqui para adicionar a primeira criança.</p>
+            <p class="text-xs text-brand-dark/60 mt-1">Clique aqui para adicionar.</p>
           </button>
         }
-
       </div>
     </section>
 
-    <!-- Empty Child State Screen -->
+    <!-- Empty / Active State -->
     @if (!vaxService.activeChild()) {
-      <div id="vax-zero-selected-state" class="text-center py-12 px-4 bg-white rounded-3xl border border-brand-dark/5 shadow-sm max-w-xl mx-auto flex flex-col items-center">
+      <div class="text-center py-12 px-4 bg-white rounded-3xl border border-brand-dark/5 shadow-sm max-w-xl mx-auto">
         <span class="text-6xl mb-4">🧸</span>
-        <h2 class="text-2xl font-bold font-display text-brand-dark tracking-tight">Nenhuma Criança Selecionada</h2>
-        <p class="text-sm text-brand-dark/60 mt-2 max-w-md">Para visualizar e gerenciar o histórico vacinal, alertas de atraso e campanhas ativas, adicione uma criança ou selecione uma disponível acima.</p>
-        <button id="btn-add-child-empty" (click)="openAddChildModal()" 
+        <h2 class="text-2xl font-bold font-display text-brand-dark">Nenhuma Criança Selecionada</h2>
+        <p class="text-sm text-brand-dark/60 mt-2">Adicione ou selecione uma criança acima.</p>
+        <button (click)="openAddChildModal()"
           class="mt-6 px-6 py-2.5 bg-brand-green text-white font-semibold rounded-xl hover:shadow-lg transition">
           Cadastrar Criança
         </button>
       </div>
     } @else {
-      <!-- Selected Child Main Dashboard Workspace wrapper -->
-      @let currentChild = vaxService.activeChild()!;
-      @let stats = vaxService.activeChildStats();
-
-      <!-- Selected Child Header Status Bar -->
-      <section id="vax-active-child-stats-bar" class="mb-6 bg-white rounded-2xl p-5 border border-brand-dark/5 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative overflow-hidden">
-        <!-- Visual theme backstrip -->
-        <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-brand-green"></div>
-
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-full bg-brand-green/10 flex items-center justify-center text-4xl select-none">
-            {{ currentChild.avatar }}
-          </div>
-          <div>
-            <h2 class="text-xl font-bold font-display tracking-tight text-brand-dark">Você está visualizando a Caderneta de:</h2>
-            <p class="text-sm text-brand-dark/80 font-medium">
-              <span class="font-bold text-brand-green">{{ currentChild.name }}</span> — {{ vaxService.formatFriendlyAge(currentChild.birthDate) }}
-            </p>
-          </div>
-        </div>
-
-        <!-- Progress Metrics -->
-        <div class="flex flex-col sm:flex-row items-center gap-6">
-          
-          <!-- Circular Progress SVG -->
-          <div class="flex items-center gap-3">
-            <div class="relative w-14 h-14 flex items-center justify-center">
-              <!-- Grid background track -->
-              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                <path class="text-brand-dark/5" stroke-width="4" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                <!-- Green progress path -->
-                <path class="text-brand-green transition-all duration-500 ease-out" 
-                  [attr.stroke-dasharray]="stats.progress + ', 100'" 
-                  stroke-width="4" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-              </svg>
-              <!-- Center percentages text -->
-              <span class="absolute text-xs font-black text-brand-dark">{{ stats.progress }}%</span>
-            </div>
-            
-            <div>
-              <p class="text-[10px] uppercase font-bold text-brand-dark/50 tracking-wider">Progresso Vacinal</p>
-              <h4 class="text-sm font-black text-brand-dark mt-0.5">Doses Tomadas</h4>
-              <p class="text-[11px] text-brand-dark/60 font-semibold">{{ stats.appliedDoses }} de {{ stats.totalDoses }} cadastradas</p>
-            </div>
-          </div>
-
-          <!-- Color key stats totals blocks -->
-          <div class="grid grid-cols-3 gap-2 w-full sm:w-auto">
-            <!-- Applied -->
-            <div class="bg-brand-green/10 border border-brand-green/20 px-3 py-1.5 rounded-xl text-center min-w-[70px]">
-              <span class="block text-base font-bold text-brand-green">{{ stats.appliedDoses }}</span>
-              <span class="text-[9px] uppercase font-bold text-brand-dark/60">OK</span>
-            </div>
-            <!-- Overdue -->
-            <div [class]="stats.overdueDoses > 0 ? 'bg-rose-50 border-rose-200' : 'bg-brand-dark/5 border-transparent'" 
-              class="border px-3 py-1.5 rounded-xl text-center min-w-[70px]">
-              <span [class]="stats.overdueDoses > 0 ? 'text-rose-500 font-extrabold animate-pulse' : 'text-brand-dark/40'" 
-                class="block text-base font-bold">{{ stats.overdueDoses }}</span>
-              <span class="text-[9px] uppercase font-bold text-brand-dark/60">Em atraso</span>
-            </div>
-            <!-- Ahead/Pending -->
-            <div class="bg-brand-orange/10 border border-brand-orange/20 px-3 py-1.5 rounded-xl text-center min-w-[70px]">
-              <span class="block text-base font-bold text-brand-orange">{{ stats.pendingDoses }}</span>
-              <span class="text-[9px] uppercase font-bold text-brand-dark/60">Próximas</span>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- TAB 1: PAINEL PRINCIPAL (DASHBOARD) -->
+      <!-- Tab: Dashboard -->
       @if (activeTab() === 'dashboard') {
-        <div id="tab-content-dashboard" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          <!-- LEFT/CENTER column: Alerts & Age Recommendations -->
-          <div class="lg:col-span-2 space-y-6">
-
-            <!-- CRITICAL CRITERION ALERT BOX: Overdue Vaccine Alerts (Scenario 1 & 2) -->
-            <div id="vax-alert-zone" class="bg-white rounded-3xl p-6 border border-brand-dark/5 shadow-sm">
-              <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-2">
-                  <span class="flex items-center justify-center w-8 h-8 rounded-full bg-rose-100 text-rose-500 animate-pulse">
-                    <ion-icon name="warning"></ion-icon>
-                  </span>
-                  <div>
-                    <h3 class="font-bold text-base tracking-tight text-brand-dark">Situação de Cobertura Urgente</h3>
-                    <p class="text-xs text-brand-dark/60 font-semibold">Preencha de imediato as pendências para proteção vacinal completa</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Container depending on list count -->
-              @if (overdueDosesForActiveChild().length === 0) {
-                <div id="vax-no-alerts-green" class="p-6 text-center border-2 border-dashed border-brand-green/20 bg-brand-green/5 rounded-2xl">
-                  <span class="text-4xl mb-2 block">🎉</span>
-                  <h4 class="font-bold text-sm text-brand-dark">Tudo em dia!</h4>
-                  <p class="text-xs text-brand-dark/60 mt-1">Parabéns! Todas as vacinas previstas para a faixa etária do(a) {{ currentChild.name }} estão aplicadas de forma correta.</p>
-                </div>
-              } @else {
-                <div id="vax-overdue-list" class="space-y-3">
-                  <!-- Real List -->
-                  @for (alert of overdueDosesForActiveChild(); track alert.vaccine.id + '_' + alert.dose.doseId) {
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-rose-50/70 hover:bg-rose-50 border border-rose-100 rounded-2xl gap-3 transition">
-                      <div class="flex items-start gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-rose-100 text-rose-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <ion-icon class="text-lg" name="alert-circle-outline"></ion-icon>
-                        </div>
-                        <div>
-                          <div class="flex items-center gap-1.5 flex-wrap">
-                            <span class="font-bold text-brand-dark text-sm">{{ alert.vaccine.name }}</span>
-                            <span class="text-[10px] uppercase font-bold text-rose-500 bg-rose-100 px-1.5 py-0.5 rounded">{{ alert.dose.doseName }}</span>
-                          </div>
-                          <p class="text-xs font-semibold text-brand-dark/70 mt-1">Previne: {{ alert.vaccine.diseasePrevented }}</p>
-                          <p class="text-[11px] text-rose-600 font-extrabold flex items-center gap-1 mt-0.5">
-                            <ion-icon class="text-xs" name="calendar"></ion-icon>
-                            Deveria ter sido aplicada em: {{ formatDoseDate(alert.dose.scheduledDate) }} (Idade: {{ alert.dose.ageMonths }} meses)
-                          </p>
-                        </div>
-                      </div>
-
-                      <!-- Action CTA to correct -->
-                      <button id="btn-log-overdue-{{ alert.vaccine.id }}-{{ alert.dose.doseId }}" 
-                        (click)="openLogDoseModal(alert.vaccine, alert.dose)"
-                        class="flex items-center justify-center gap-1.5 px-4 py-2 bg-brand-green hover:bg-brand-green/90 text-white font-semibold text-xs rounded-xl shadow-sm self-start sm:self-center transition whitespace-nowrap">
-                        <ion-icon class="text-sm" name="checkmark-circle"></ion-icon>
-                        Registrar Aplicação
-                      </button>
-                    </div>
-                  }
-                </div>
-              }
-            </div>
-
-            <!-- UPCOMING CHECKS: Age schedule calendar checklist (Scenario 1) -->
-            <div id="vax-upcoming-zone" class="bg-white rounded-3xl p-6 border border-brand-dark/5 shadow-sm">
-              <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-2">
-                  <span class="flex items-center justify-center w-8 h-8 rounded-full bg-brand-orange/10 text-brand-orange">
-                    <ion-icon name="time"></ion-icon>
-                  </span>
-                  <div>
-                    <h3 class="font-bold text-base tracking-tight text-brand-dark">Estrutura de Planejamento (Próximas Doses)</h3>
-                    <p class="text-xs text-brand-dark/60 font-semibold">Vacinas previstas ordenadas pela data da faixa etária regulamentar</p>
-                  </div>
-                </div>
-                
-                <button id="btn-go-timeline" (click)="setTab('timeline')" class="text-xs font-bold text-brand-green hover:underline">
-                  Ver Caderneta Completa
-                </button>
-              </div>
-
-              <!-- List -->
-              @if (upcomingDosesForActiveChild().length === 0) {
-                <div class="text-center py-6 text-brand-dark/40 text-xs">
-                  Sem novas doses previstas remanescentes.
-                </div>
-              } @else {
-                <div class="space-y-3">
-                  @for (item of upcomingDosesForActiveChild(); track item.vaccine.id + '_' + item.dose.doseId) {
-                    <div class="flex items-center justify-between p-3.5 bg-neutral-50 hover:bg-neutral-100/70 border border-brand-dark/5 rounded-xl transition">
-                      <div class="flex items-start gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-brand-orange/10 text-brand-orange flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <ion-icon class="text-lg" name="time"></ion-icon>
-                        </div>
-                        <div>
-                          <div class="flex items-center gap-1.5">
-                            <span class="font-bold text-brand-dark text-sm">{{ item.vaccine.name }}</span>
-                            <span class="text-[9px] bg-brand-orange/20 text-brand-dark font-extrabold px-1.5 py-0.5 rounded">{{ item.dose.doseName }}</span>
-                          </div>
-                          <p class="text-[11px] text-brand-dark/60 mt-0.5 font-medium">Idade sugerida: {{ item.dose.ageMonths }}m — Previsto: {{ formatDoseDate(item.dose.scheduledDate) }}</p>
-                        </div>
-                      </div>
-
-                      <button id="btn-quick-apply-{{ item.vaccine.id }}" 
-                        (click)="openLogDoseModal(item.vaccine, item.dose)" 
-                        class="px-3 py-1.5 bg-white border border-brand-dark/10 hover:border-brand-green text-brand-dark hover:text-brand-green font-bold text-xs rounded-lg transition duration-200">
-                        Marcar Ok
-                      </button>
-                    </div>
-                  }
-                </div>
-              }
-            </div>
-
-          </div>
-
-          <!-- RIGHT SIDEBAR: Targeted Active Campaigns (Scenario 3) -->
-          <div class="space-y-6">
-            
-            <!-- Dynamic Campaign Box -->
-            <div id="vax-right-campaigns-section" class="bg-white rounded-3xl p-6 border border-brand-dark/5 shadow-sm">
-              <div class="flex items-center justify-between mb-4 pb-2 border-b border-brand-dark/5">
-                <div class="flex items-center gap-2">
-                  <span class="flex items-center justify-center w-8 h-8 rounded-full bg-brand-yellow/20 text-amber-500">
-                    <ion-icon name="megaphone"></ion-icon>
-                  </span>
-                  <div>
-                    <h3 class="font-bold text-base tracking-tight text-brand-dark">Campanhas Recomendadas</h3>
-                    <p class="text-xs text-brand-dark/60 font-semibold">Matching inteligente pela idade de {{ currentChild.name }}</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- List matching campaigns dynamically -->
-              @if (vaxService.activeChildCampaigns().length === 0) {
-                <div class="text-center py-8 text-neutral-500">
-                  <span class="text-4xl block mb-2">🔍</span>
-                  <p class="text-xs font-semibold">Nenhuma campanha em vigor para esta faixa etária hoje.</p>
-                  <p class="text-[10px] text-neutral-400 mt-1">A idade aproximada é {{ vaxService.calculateAgeInMonths(currentChild.birthDate) }} meses.</p>
-                </div>
-              } @else {
-                <div class="space-y-4">
-                  @for (camp of vaxService.activeChildCampaigns(); track camp.id) {
-                    <div class="border border-brand-dark/5 rounded-2xl overflow-hidden shadow-sm bg-neutral-50 hover:bg-neutral-100/50 transition">
-                      <!-- Banner background seed -->
-                      <div class="h-20 bg-cover bg-center relative" [style.background-image]="'url(' + camp.bannerImage + ')'">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/20 p-2.5 flex items-end">
-                          <span class="text-[9px] font-extrabold uppercase tracking-wide bg-brand-yellow text-brand-dark px-1.5 py-0.5 rounded">
-                            RECOMENDADA
-                          </span>
-                        </div>
-                      </div>
-
-                      <div class="p-4">
-                         <h4 class="font-bold text-xs pl-0 text-brand-dark leading-tight">{{ camp.title }}</h4>
-                        <p class="text-[11px] text-brand-dark/70 mt-1 lines-clamp-3 leading-relaxed">{{ camp.description }}</p>
-                        
-                        <div class="mt-3 pt-2.5 border-t border-brand-dark/5 space-y-1 text-[10px] text-brand-dark/60 font-semibold">
-                          <p class="flex items-center gap-1">
-                            <ion-icon class="text-sm" name="person"></ion-icon> 
-                            Público: {{ camp.targetAgeText }}
-                          </p>
-                          <p class="flex items-center gap-1 text-brand-green font-bold">
-                            <ion-icon class="text-sm" name="calendar"></ion-icon> 
-                            Válido até: {{ formatRawDate(camp.endDate) }}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  }
-                </div>
-              }
-
-              <!-- View General Campaigns list button link -->
-              <button id="btn-see-all-camps" (click)="setTab('campaigns')" 
-                class="w-full mt-4 py-2.5 bg-brand-dark/5 hover:bg-brand-dark/10 text-brand-dark font-bold text-xs rounded-xl transition">
-                Visualizar Todas as Campanhas em Vigor
-              </button>
-            </div>
-
-            <!-- Health Information Tip Card representing additional value -->
-            <div id="vax-general-pediatri-tip" class="bg-gradient-to-br from-brand-orange/10 to-brand-yellow/10 rounded-3xl p-5 border border-brand-orange/10 flex items-start gap-3">
-              <span class="text-2xl mt-0.5">💡</span>
-              <div>
-                <h4 class="font-bold text-xs text-brand-dark font-display">Anotação Importante</h4>
-                <p class="text-[11px] text-brand-dark/80 leading-relaxed mt-1">Sempre leve a caderneta física de papel quando for ao posto de saúde (UBS) para receber a assinatura oficial e etiquetas do lote biológico. Use nossa plataforma para controle familiar interativo 100% livre de atrasos!</p>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
+        <app-dashboard-tab
+          [overdueDoses]="overdueDosesForActiveChild()"
+          [upcomingDoses]="upcomingDosesForActiveChild()"
+          (openLogDose)="openLogDoseModal($event.vaccine, $event.dose)"
+          (goToTab)="setTab($event)">
+        </app-dashboard-tab>
       }
 
-      <!-- TAB 2: DETAILED VACCINATION TIMELINE (CADERNETA COMPLETA) -->
+      <!-- Tab: Timeline -->
       @if (activeTab() === 'timeline') {
-        <div id="tab-content-timeline" class="space-y-6">
-          
-          <!-- Search & Status filter Header control toolbelt -->
-          <div class="bg-white p-4 sm:p-5 rounded-3xl border border-brand-dark/5 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
-            
-            <!-- Filter Pills -->
-            <div class="flex items-center gap-1 flex-wrap w-full md:w-auto">
-              <button id="filter-btn-all" (click)="timelineFilter.set('all')"
-                [class]="timelineFilter() === 'all' ? 'bg-brand-dark text-white font-bold' : 'bg-neutral-50 text-brand-dark/70 border border-brand-dark/5 hover:bg-brand-dark/5'"
-                class="px-4 py-1.5 rounded-full text-xs transition">
-                Todas ({{ vaxService.VACCINES.length }})
-              </button>
-              <button id="filter-btn-applied" (click)="timelineFilter.set('applied')"
-                [class]="timelineFilter() === 'applied' ? 'bg-brand-green text-white font-bold' : 'bg-neutral-50 text-brand-dark/70 border border-brand-dark/5 hover:bg-brand-dark/5'"
-                class="px-4 py-1.5 rounded-full text-xs transition">
-                Aplicadas/Ok
-              </button>
-              <button id="filter-btn-overdue" (click)="timelineFilter.set('overdue')"
-                [class]="timelineFilter() === 'overdue' ? 'bg-rose-500 text-white font-bold' : 'bg-neutral-50 text-brand-dark/70 border border-brand-dark/5 hover:bg-brand-dark/5'"
-                class="px-4 py-1.5 rounded-full text-xs transition">
-                Em Atraso
-              </button>
-              <button id="filter-btn-pending" (click)="timelineFilter.set('pending')"
-                [class]="timelineFilter() === 'pending' ? 'bg-brand-orange text-brand-dark font-extrabold' : 'bg-neutral-50 text-brand-dark/70 border border-brand-dark/5 hover:bg-brand-dark/5'"
-                class="px-4 py-1.5 rounded-full text-xs transition">
-                Agendadas
-              </button>
-            </div>
-
-            <!-- Dynamic Search input -->
-            <div class="relative w-full md:max-w-xs flex-shrink-0">
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-brand-dark/40">
-                <ion-icon class="text-base" name="search"></ion-icon>
-              </span>
-              <input id="input-search-vax" type="text"
-                [value]="timelineSearchQuery()"
-                (input)="timelineSearchQuery.set($any($event.target).value)"
-                placeholder="Buscar vacina, doença ou sigla..."
-                class="w-full pl-9 pr-4 py-2 border border-brand-dark/10 rounded-xl text-xs focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
-            </div>
-
-          </div>
-
-          <!-- Empty search outcome panel -->
-          @if (filteredVaccineGroups().length === 0) {
-            <div id="vax-search-empty-state" class="text-center py-12 px-4 bg-white rounded-3xl border border-brand-dark/5 shadow-sm max-w-md mx-auto">
-              <span class="text-4xl block mb-2">🧸</span>
-              <h3 class="font-bold text-sm text-brand-dark">Nenhum resultado encontrado</h3>
-              <p class="text-xs text-brand-dark/60 mt-1">Tente ajustar a busca ou desabilitar os filtros ativos no momento.</p>
-              <button id="btn-clear-search-filters" (click)="timelineSearchQuery.set(''); timelineFilter.set('all')" 
-                class="mt-4 px-4 py-1.5 bg-brand-green text-white text-xs font-bold rounded-lg hover:shadow-md transition">
-                Limpar Filtros
-              </button>
-            </div>
-          } @else {
-            <!-- Vaccines Grid Cards list -->
-            <div id="vax-timeline-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              
-              @for (vGroup of filteredVaccineGroups(); track vGroup.vaccine.id) {
-                <div [id]="'vGroup-card-' + vGroup.vaccine.id" 
-                   class="bg-white rounded-3xl border border-brand-dark/5 shadow-sm hover:shadow-md transition duration-200 overflow-hidden flex flex-col justify-between">
-                  
-                  <!-- Card Header -->
-                  <div class="p-5 pb-3">
-                    <div class="flex items-start justify-between gap-3">
-                      <div>
-                        <div class="flex items-center gap-1.5 flex-wrap">
-                          <h4 class="font-extrabold text-base text-brand-dark font-display">{{ vGroup.vaccine.name }}</h4>
-                          <!-- Coverage Badge -->
-                          @if (vGroup.isFullyApplied) {
-                            <span class="text-[9px] font-black bg-emerald-150 text-white uppercase px-1.5 py-0.5 rounded-full flex items-center bg-emerald-600 gap-0.5">
-                              <ion-icon class="text-[10px] leading-none" name="checkmark-circle"></ion-icon> Completo
-                            </span>
-                          } @else if (vGroup.hasOverdue) {
-                            <span class="text-[9px] font-black bg-rose-500 text-white uppercase px-1.5 py-0.5 rounded-full flex items-center gap-0.5 animate-pulse">
-                              <ion-icon class="text-[10px] leading-none animate-bounce" name="alert-circle"></ion-icon> Atrasada
-                            </span>
-                          }
-                        </div>
-                        <p class="text-[10px] font-bold text-brand-dark/50 tracking-wide mt-0.5 uppercase">{{ vGroup.vaccine.fullName }}</p>
-                      </div>
-                      
-                      <!-- Quick Info details launcher button -->
-                      <button id="btn-info-vax-{{ vGroup.vaccine.id }}" 
-                        (click)="selectedVaccineForDetail.set(vGroup.vaccine)"
-                        title="Ver manual de bula e efeitos colaterais"
-                        class="flex items-center justify-center w-7 h-7 bg-brand-dark/5 hover:bg-brand-dark/10 rounded-full transition text-brand-dark/60 hover:text-brand-dark">
-                        <ion-icon class="text-sm" name="information-circle"></ion-icon>
-                      </button>
-                    </div>
-
-                    <p class="text-xs text-brand-dark/70 font-semibold mt-2.5 flex items-start gap-1">
-                      <ion-icon class="text-base text-brand-green flex-shrink-0" name="shield"></ion-icon>
-                      <span>Previne: <span class="font-normal text-brand-dark/80">{{ vGroup.vaccine.diseasePrevented }}</span></span>
-                    </p>
-                  </div>
-
-                  <!-- Doses List Details inside Card -->
-                  <div class="flex-grow bg-neutral-50/50 border-t border-b border-brand-dark/5 px-5 py-4 space-y-3.5">
-                    @for (dose of vGroup.doses; track dose.doseId) {
-                      <div class="flex items-center justify-between gap-4 text-xs font-semibold">
-                        
-                        <!-- Dose text metadata and expected date -->
-                        <div>
-                          <div class="flex items-center gap-1.5">
-                            <span class="font-bold text-brand-dark">{{ dose.doseName }} </span>
-                            <span class="text-[10px] text-brand-dark/50">({{ dose.ageMonths }}m)</span>
-                          </div>
-                          
-                          @if (dose.status === 'applied') {
-                            <p class="text-[10px] text-brand-green font-bold flex items-center gap-0.5 mt-0.5">
-                              <ion-icon class="text-[11px] leading-none" name="checkmark-circle"></ion-icon>
-                              Aplicada em {{ formatRawDate(dose.appliedDate) }}
-                            </p>
-                          } @else if (dose.status === 'overdue') {
-                            <p class="text-[10px] text-rose-500 font-extrabold flex items-center gap-0.5 mt-0.5">
-                              <ion-icon class="text-[11px] leading-none" name="warning"></ion-icon>
-                              Atrasada (Prevista: {{ formatDoseDate(dose.scheduledDate) }})
-                            </p>
-                          } @else {
-                            <p class="text-[10px] text-brand-orange flex items-center gap-0.5 mt-0.5">
-                              <ion-icon class="text-[11px] leading-none" name="time"></ion-icon>
-                              Agendada para: {{ formatDoseDate(dose.scheduledDate) }}
-                            </p>
-                          }
-                        </div>
-
-                        <!-- Mini Actions Buttons per dose -->
-                        <div class="flex items-center gap-1.5">
-                          @if (dose.status === 'applied') {
-                            <!-- Detail of apply parameters if available -->
-                            <button id="btn-undo-dose-{{ vGroup.vaccine.id }}-{{ dose.doseId }}"
-                              (click)="undoDose(vGroup.vaccine.id, dose.doseId)"
-                              title="Remover assinatura de dose"
-                              class="w-6 h-6 rounded bg-neutral-100 hover:bg-rose-100/70 text-brand-dark hover:text-rose-500 flex items-center justify-center transition border border-brand-dark/5">
-                              <ion-icon class="text-xs" name="arrow-undo"></ion-icon>
-                            </button>
-                            <span class="text-[10px] text-white bg-brand-green/95 px-2 py-0.5 rounded shadow-sm text-center select-none font-bold">Ok</span>
-                          } @else {
-                            <button id="btn-apply-dose-{{ vGroup.vaccine.id }}-{{ dose.doseId }}"
-                              (click)="openLogDoseModal(vGroup.vaccine, dose)"
-                              [class]="dose.status === 'overdue' ? 'bg-rose-500 text-white hover:bg-rose-600 shadow-sm shadow-rose-200' : 'bg-white hover:bg-brand-green hover:text-white border border-brand-dark/10 hover:border-brand-green'"
-                              class="px-2.5 py-1 text-[10px] font-bold rounded transition">
-                              Aplicar
-                            </button>
-                          }
-                        </div>
-                      </div>
-                    }
-                  </div>
-
-                  <!-- Quick Expand Card Info bar -->
-                  <div class="bg-white/60 p-3 text-center">
-                    <p class="text-[10px] text-brand-dark/50 font-semibold tracking-wide flex items-center justify-center gap-1">
-                      <ion-icon class="text-xs" name="bandage"></ion-icon>
-                      Bula recomendada pelo Ministério da Saúde
-                    </p>
-                  </div>
-
-                </div>
-              }
-
-            </div>
-          }
-
-        </div>
+        <app-timeline-tab
+          [filteredGroups]="filteredVaccineGroups()"
+          [searchQuery]="timelineSearchQuery()"
+          [activeFilter]="timelineFilter()"
+          (searchQueryChange)="timelineSearchQuery.set($event)"
+          (activeFilterChange)="timelineFilter.set($event)"
+          (applyDose)="openLogDoseModal($event.vaccine, $event.dose)"
+          (undoDose)="undoDose($event.vaccineId, $event.doseId)"
+          (showDetail)="selectedVaccineForDetail.set($event)">
+        </app-timeline-tab>
       }
 
-      <!-- TAB 3: CAMPANHAS EM VIGOR (PUBLIC CAMPAIGNS) -->
+      <!-- Tab: Campaigns -->
       @if (activeTab() === 'campaigns') {
-        <div id="tab-content-campaigns" class="space-y-6">
-          
-          <div class="bg-gradient-to-r from-brand-green/30 via-brand-yellow/30 to-brand-orange/30 p-6 rounded-3xl border border-brand-green/10 text-center max-w-3xl mx-auto space-y-2">
-            <span class="text-5xl">📢</span>
-            <h3 class="text-xl font-bold font-display text-brand-dark">Campanhas Governamentais de Saúde Coletiva</h3>
-            <p class="text-xs text-brand-dark/80 max-w-xl mx-auto leading-relaxed">Mostramos aqui as principais ações de vacinação comunitária vigentes. O sistema ativa lembretes inteligentes caso o perfil de idade da criança selecionada caiba nos critérios regulamentares de cada campanha!</p>
-          </div>
-
-          <!-- Campaigns Grid -->
-          <div id="vax-campaigns-all-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @for (campaign of vaxService.campaigns(); track campaign.id) {
-              <!-- We check if the targeted child is matching this campaign -->
-              @let ageMonths = vaxService.calculateAgeInMonths(currentChild.birthDate);
-              @let isMatched = ageMonths >= campaign.minAgeMonths && ageMonths <= campaign.maxAgeMonths;
-
-              <div [id]="'campaign-full-card-' + campaign.id" 
-                class="bg-white rounded-3xl border border-brand-dark/5 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between">
-                
-                <!-- Graphic Image -->
-                <div class="h-32 bg-gray-200 relative">
-                  <img [src]="campaign.bannerImage" alt="{{ campaign.title }}" referrerpolicy="no-referrer" class="w-full h-full object-cover">
-                  <!-- Match Overlay Badge -->
-                  @if (isMatched) {
-                    <div class="absolute inset-0 bg-brand-green/10 backdrop-blur-[1px] pointer-events-none"></div>
-                    <div class="absolute top-3 left-3 bg-brand-green text-white font-bold text-[9px] uppercase tracking-wider px-2 py-0.5 rounded shadow">
-                      Recomendada para o(a) {{ currentChild.name }}
-                    </div>
-                  } @else {
-                    <div class="absolute top-3 left-3 bg-brand-dark/60 text-white font-semibold text-[9px] px-2 py-0.5 rounded">
-                      Geral
-                    </div>
-                  }
-                </div>
-
-                <div class="p-5 flex-grow flex flex-col justify-between">
-                  <div>
-                    <h4 class="font-extrabold text-sm ml-0 text-brand-dark font-display leading-snug">{{ campaign.title }}</h4>
-                    <p class="text-[11px] text-brand-dark/70 mt-2 leading-relaxed">{{ campaign.description }}</p>
-                  </div>
-
-                  <div class="mt-4 pt-4 border-t border-brand-dark/5 space-y-2 text-[11px] text-brand-dark/70 font-semibold bg-neutral-50/50 p-3 rounded-xl">
-                    <div class="flex items-center gap-1.5 flex-wrap">
-                      <ion-icon class="text-sm text-brand-green" name="people-outline"></ion-icon>
-                      <span>Publico-Alvo: <span class="font-normal text-brand-dark/80">{{ campaign.targetAgeText }}</span></span>
-                    </div>
-
-                    <div class="flex items-center gap-1.5 flex-wrap">
-                      <ion-icon class="text-sm text-brand-orange" name="calendar"></ion-icon>
-                      <span>Período da Ação: <span class="font-normal text-brand-dark/80">{{ formatRawDate(campaign.startDate) }} até {{ formatRawDate(campaign.endDate) }}</span></span>
-                    </div>
-
-                    @if (isMatched) {
-                      <div class="flex items-start gap-1 p-2 bg-brand-green/10 border border-brand-green/20 rounded-lg text-brand-green">
-                        <ion-icon class="text-[14px] mt-0.5" name="checkmark-circle"></ion-icon>
-                        <p class="text-[10px] font-bold">O(A) {{ currentChild.name }} está qualificado(a) de acordo com a faixa etária!</p>
-                      </div>
-                    }
-                  </div>
-                </div>
-
-              </div>
-            }
-          </div>
-
-        </div>
+        <app-campaigns-tab></app-campaigns-tab>
       }
 
-      <!-- TAB 4: GERENCIAR FILHOS (ADMIN CRUD) -->
+      <!-- Tab: Children -->
       @if (activeTab() === 'children') {
-        <div id="tab-content-children" class="space-y-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="text-base font-bold text-brand-dark">Gestão Familiar Multicrianças</h3>
-              <p class="text-xs text-brand-dark/60 font-semibold">Adicione, edite ou remova perfis mantendo os históricos separados de forma segura</p>
-            </div>
-            
-            <button id="btn-add-child-tab" (click)="openAddChildModal()" 
-              class="flex items-center gap-1 px-4 py-2 bg-brand-green text-white text-xs font-bold rounded-xl hover:shadow shadow-sm transition">
-              <ion-icon class="text-sm" name="add"></ion-icon>
-              Adicionar Filho
-            </button>
-          </div>
-
-          <!-- Family Profiles Grid -->
-          <div id="vax-family-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            @for (kid of vaxService.children(); track kid.id) {
-              <div [id]="'fam-kid-card-' + kid.id" 
-                class="bg-white rounded-3xl p-5 border border-brand-dark/5 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-                
-                <div class="space-y-4">
-                  <!-- Header details -->
-                  <div class="flex items-center gap-3.5">
-                    <span class="text-5xl bg-neutral-50 p-2.5 rounded-2xl w-16 h-16 flex items-center justify-center border border-brand-dark/5">
-                      {{ kid.avatar }}
-                    </span>
-                    <div>
-                      <div class="flex items-center gap-1.5 flex-wrap">
-                        <h4 class="font-extrabold text-base text-brand-dark leading-tight">{{ kid.name }}</h4>
-                        @if (kid.gender === 'F') {
-                          <span class="text-[9px] bg-pink-100 text-pink-600 font-bold px-1.5 py-0.5 rounded">Feminino</span>
-                        } @else {
-                          <span class="text-[9px] bg-blue-100 text-blue-600 font-bold px-1.5 py-0.5 rounded">Masculino</span>
-                        }
-                      </div>
-
-                      <p class="text-xs text-brand-dark/50 font-bold mt-0.5">{{ vaxService.formatFriendlyAge(kid.birthDate) }}</p>
-                    </div>
-                  </div>
-
-                  <!-- Metadata attributes table specs -->
-                  <div class="grid grid-cols-2 gap-2 text-[11px] font-semibold text-brand-dark/70 bg-neutral-50 p-3.5 rounded-2xl border border-brand-dark/5">
-                    <div>
-                      <p class="text-[9px] uppercase font-bold text-brand-dark/40">Nascimento</p>
-                      <span class="text-xs font-bold text-brand-dark">{{ formatRawDate(kid.birthDate) }}</span>
-                    </div>
-                    <div>
-                      <p class="text-[9px] uppercase font-bold text-brand-dark/40">Tip. Sanguíneo</p>
-                      <span class="text-xs font-bold text-brand-dark">{{ kid.bloodType || 'Informado não' }}</span>
-                    </div>
-                    <div class="mt-1">
-                      <p class="text-[9px] uppercase font-bold text-brand-dark/40">Peso Recente</p>
-                      <span class="text-xs font-bold text-brand-dark">{{ kid.weight ? (kid.weight + ' kg') : '--' }}</span>
-                    </div>
-                    <div class="mt-1">
-                      <p class="text-[9px] uppercase font-bold text-brand-dark/40">Altura</p>
-                      <span class="text-xs font-bold text-brand-dark">{{ kid.height ? (kid.height + ' cm') : '--' }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Admin Action footer buttons -->
-                <div class="mt-5 pt-3.5 border-t border-brand-dark/5 flex items-center justify-between gap-2.5">
-                  <button id="btn-delete-kid-f-{{ kid.id }}"
-                    (click)="deleteChild(kid.id)"
-                    class="flex items-center justify-center gap-1 px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100/70 hover:text-rose-700 rounded-lg text-[11px] font-bold transition">
-                    <ion-icon class="text-xs" name="trash"></ion-icon> Remover
-                  </button>
-
-                  <div class="flex items-center gap-2">
-                    <button id="btn-edit-kid-f-{{ kid.id }}"
-                      (click)="openEditChildModal(kid)"
-                      class="flex items-center justify-center gap-1 px-3 py-1.5 bg-neutral-100 text-brand-dark hover:bg-neutral-200/70 rounded-lg text-[11px] font-bold transition">
-                      <ion-icon class="text-xs" name="create"></ion-icon> Editar
-                    </button>
-
-                    <button id="btn-sel-kid-f-{{ kid.id }}"
-                      (click)="selectChild(kid.id)"
-                      [disabled]="vaxService.activeChildId() === kid.id"
-                      class="flex items-center justify-center gap-1 px-3 py-1.5 bg-brand-green disabled:bg-neutral-100 text-white disabled:text-brand-dark/30 rounded-lg text-[11px] font-bold transition">
-                      <ion-icon class="text-xs" name="checkmark"></ion-icon> 
-                      {{ vaxService.activeChildId() === kid.id ? 'Selecionado' : 'Selecionar' }}
-                    </button>
-                  </div>
-                </div>
-
-              </div>
-            }
-          </div>
-
-        </div>
+        <app-children-tab
+          (addChild)="openAddChildModal()"
+          (editChild)="openEditChildModal($event)"
+          (deleteChild)="deleteChild($event)"
+          (selectChild)="selectChild($event)">
+        </app-children-tab>
       }
-
     }
   </main>
 
@@ -811,20 +172,17 @@
   <ng-template>
     @if (selectedVaccineForDetail(); as vDetail) {
       <div class="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl relative overflow-hidden animate-fade-in">
-        
         <div class="absolute left-0 right-0 top-0 h-2 bg-gradient-to-r from-brand-green to-brand-orange"></div>
-
         <div class="flex items-start justify-between gap-4 mt-1.5">
           <div>
             <h3 class="text-lg font-extrabold leading-tight tracking-tight text-brand-dark font-display">{{ vDetail.name }}</h3>
             <p class="text-xs text-brand-dark/60 font-semibold tracking-wide uppercase mt-0.5">{{ vDetail.fullName }}</p>
           </div>
-          <button id="btn-close-detail" (click)="selectedVaccineForDetail.set(null)"
-            class="flex items-center justify-center p-1 hover:bg-neutral-100 rounded-lg text-brand-dark/40 hover:text-brand-dark">
+          <button (click)="selectedVaccineForDetail.set(null)"
+            class="flex items-center justify-center p-1 hover:bg-neutral-100 rounded-lg text-brand-dark/40">
             <ion-icon name="close"></ion-icon>
           </button>
         </div>
-
         <div class="mt-5 space-y-4 text-xs font-semibold">
           <div>
             <p class="text-[10px] uppercase font-bold text-brand-dark/40 tracking-wider">Patologias Prevenidas</p>
@@ -833,32 +191,28 @@
               {{ vDetail.diseasePrevented }}
             </p>
           </div>
-
           <div>
-            <p class="text-[10px] uppercase font-bold text-brand-dark/40 tracking-wider">Informações Gerais de Segurança</p>
+            <p class="text-[10px] uppercase font-bold text-brand-dark/40 tracking-wider">Informações Gerais</p>
             <p class="text-brand-dark/80 mt-1 leading-relaxed font-normal bg-neutral-50 p-3 rounded-xl border border-brand-dark/5">
               {{ vDetail.description }}
             </p>
           </div>
-
           @if (vDetail.sideEffects) {
             <div>
-              <p class="text-[10px] uppercase font-bold text-brand-dark/40 tracking-wider">Possíveis Efeitos Colaterais Comuns</p>
-              <p class="text-brand-dark/70 font-medium leading-relaxed mt-1 flex items-start gap-1 p-3 bg-brand-orange/5 border border-brand-orange/15 rounded-xl">
+              <p class="text-[10px] uppercase font-bold text-brand-dark/40 tracking-wider">Efeitos Colaterais</p>
+              <p class="text-brand-dark/70 font-medium leading-relaxed mt-1 p-3 bg-brand-orange/5 border border-brand-orange/15 rounded-xl">
                 <span class="text-sm">🤒</span>
                 <span>{{ vDetail.sideEffects }}</span>
               </p>
             </div>
           }
         </div>
-
         <div class="mt-6 pt-4 border-t border-brand-dark/5 flex justify-end">
-          <button id="btn-close-detail-ok" (click)="selectedVaccineForDetail.set(null)"
+          <button (click)="selectedVaccineForDetail.set(null)"
             class="px-5 py-2 bg-brand-dark hover:bg-brand-dark/90 text-white font-bold text-xs rounded-xl shadow transition">
-            Fechar Informações
+            Fechar
           </button>
         </div>
-
       </div>
     }
   </ng-template>
@@ -868,63 +222,54 @@
   <ng-template>
     @if (vaccineToLog(); as logData) {
       <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl relative overflow-hidden">
-        
         <div class="absolute left-0 right-0 top-0 h-2 bg-brand-green"></div>
-
         <div class="flex items-start justify-between gap-4 mt-1">
           <div>
-            <h3 class="text-base font-bold font-display text-brand-dark leading-tight">Assinar Comprovação de Vacina</h3>
-            <p class="text-[11px] text-brand-dark/60 font-semibold mt-0.5">Vacina: <span class="font-extrabold text-brand-green">{{ logData.vaccine.name }} ({{ logData.dose.doseName }})</span> para {{ vaxService.activeChild()?.name }}</p>
+            <h3 class="text-base font-bold font-display text-brand-dark">Registrar Aplicação</h3>
+            <p class="text-[11px] text-brand-dark/60 font-semibold mt-0.5">{{ logData.vaccine.name }} ({{ logData.dose.doseName }})</p>
           </div>
-          <button id="btn-close-log" (click)="vaccineToLog.set(null)"
+          <button (click)="vaccineToLog.set(null)"
             class="flex items-center justify-center p-1 hover:bg-neutral-100 rounded-lg text-brand-dark/40">
             <ion-icon name="close"></ion-icon>
           </button>
         </div>
-
         <form [formGroup]="vaxLogForm" (ngSubmit)="saveDoseLog()" class="mt-4 space-y-4 text-xs font-semibold">
-          
           <div>
-            <label for="input-log-date" class="block text-xs font-bold text-brand-dark/80 mb-1">Data da Aplicação (Obrigatório)</label>
-            <input id="input-log-date" type="date" formControlName="appliedDate"
+            <label class="block text-xs font-bold text-brand-dark/80 mb-1">Data da Aplicação</label>
+            <input type="date" formControlName="appliedDate"
               class="w-full px-3 py-2 border border-brand-dark/10 rounded-xl focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
             @if (vaxLogForm.controls['appliedDate'].touched && vaxLogForm.controls['appliedDate'].invalid) {
-              <span class="text-[10px] text-rose-500 font-bold block mt-0.5">Defina uma data válida de aplicação.</span>
+              <span class="text-[10px] text-rose-500 font-bold block mt-0.5">Defina uma data válida.</span>
             }
           </div>
-
           <div>
-            <label for="input-log-place" class="block text-xs font-bold text-brand-dark/80 mb-1">Local da Vacinação (Posto / UBS)</label>
-            <input id="input-log-place" type="text" formControlName="appliedPlace" placeholder="Ex: UBS Central de Pinheiros"
+            <label class="block text-xs font-bold text-brand-dark/80 mb-1">Local</label>
+            <input type="text" formControlName="appliedPlace" placeholder="Ex: UBS Central"
               class="w-full px-3 py-2 border border-brand-dark/10 rounded-xl focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
           </div>
-
           <div class="grid grid-cols-2 gap-3.5">
             <div>
-              <label for="input-log-lot" class="block text-xs font-bold text-brand-dark/80 mb-1">Código do Lote</label>
-              <input id="input-log-lot" type="text" formControlName="lotNumber" placeholder="Ex: BCG443-P"
+              <label class="block text-xs font-bold text-brand-dark/80 mb-1">Lote</label>
+              <input type="text" formControlName="lotNumber" placeholder="Ex: BCG443-P"
                 class="w-full px-3 py-2 border border-brand-dark/10 rounded-xl focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
             </div>
             <div>
-              <label for="input-log-nurse" class="block text-xs font-bold text-brand-dark/80 mb-1">Nome do Vacinador</label>
-              <input id="input-log-nurse" type="text" formControlName="vacinatorName" placeholder="Ex: Enfª. Sandra Silva"
+              <label class="block text-xs font-bold text-brand-dark/80 mb-1">Vacinador</label>
+              <input type="text" formControlName="vacinatorName" placeholder="Ex: Enfª. Sandra"
                 class="w-full px-3 py-2 border border-brand-dark/10 rounded-xl focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
             </div>
           </div>
-
-          <div class="mt-6 pt-4 border-t border-brand-dark/5 flex items-center justify-end gap-3">
-            <button id="btn-cancel-log" type="button" (click)="vaccineToLog.set(null)"
+          <div class="pt-4 border-t border-brand-dark/5 flex items-center justify-end gap-3">
+            <button type="button" (click)="vaccineToLog.set(null)"
               class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200/80 text-brand-dark font-bold rounded-xl transition">
               Cancelar
             </button>
-            <button id="btn-save-log" type="submit" 
+            <button type="submit"
               class="px-5 py-2 bg-brand-green hover:bg-brand-green/90 text-white font-extrabold rounded-xl shadow-md transition">
               Salvar Registro
             </button>
           </div>
-
         </form>
-
       </div>
     }
   </ng-template>
@@ -934,45 +279,41 @@
   <ng-template>
     @if (showChildModal()) {
       <div class="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl relative overflow-hidden animate-fade-in max-h-[90vh] overflow-y-auto">
-        
         <div class="absolute left-0 right-0 top-0 h-2 bg-gradient-to-r from-brand-yellow to-brand-orange"></div>
-
         <div class="flex items-start justify-between gap-4 mt-1">
           <div>
-            <h3 class="text-lg font-bold font-display text-brand-dark leading-tight">
-              {{ editingChild() ? 'Editar Perfil do Filho' : 'Cadastrar Perfil do Filho' }}
+            <h3 class="text-lg font-bold font-display text-brand-dark">
+              {{ editingChild() ? 'Editar Perfil' : 'Cadastrar Perfil' }}
             </h3>
-            <p class="text-xs text-brand-dark/60 font-semibold mt-0.5">Preencha os metadados abaixo para acompanhamento de caderneta individual</p>
+            <p class="text-xs text-brand-dark/60 font-semibold mt-0.5">Preencha os dados abaixo</p>
           </div>
-          <button id="btn-close-child-m" (click)="showChildModal.set(false)"
+          <button (click)="showChildModal.set(false)"
             class="flex items-center justify-center p-1 hover:bg-neutral-100 rounded-lg text-brand-dark/40">
             <ion-icon name="close"></ion-icon>
           </button>
         </div>
 
         <form [formGroup]="childForm" (ngSubmit)="saveChild()" class="mt-4 space-y-4 text-xs font-semibold">
-          
           <div>
-            <label for="input-child-name" class="block text-xs font-bold text-brand-dark/80 mb-1">Nome Completo (Obrigatório)</label>
-            <input id="input-child-name" type="text" formControlName="name" placeholder="Ex: Sofia de Souza Mendes"
+            <label class="block text-xs font-bold text-brand-dark/80 mb-1">Nome Completo</label>
+            <input type="text" formControlName="name" placeholder="Ex: Sofia Mendes"
               class="w-full px-3 py-2 border border-brand-dark/10 rounded-xl focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
             @if (childForm.controls['name'].touched && childForm.controls['name'].invalid) {
-              <span class="text-[10px] text-rose-500 font-bold block mt-0.5">O nome é obrigatório (mínimo de 2 caracteres).</span>
+              <span class="text-[10px] text-rose-500 font-bold block mt-0.5">Nome é obrigatório (mín. 2 caracteres).</span>
             }
           </div>
 
           <div class="grid grid-cols-2 gap-3.5">
             <div>
-              <label for="input-child-bdate" class="block text-xs font-bold text-brand-dark/80 mb-1">Data de Nascimento</label>
-              <input id="input-child-bdate" type="date" formControlName="birthDate"
+              <label class="block text-xs font-bold text-brand-dark/80 mb-1">Data de Nascimento</label>
+              <input type="date" formControlName="birthDate"
                 class="w-full px-3 py-2 border border-brand-dark/10 rounded-xl focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green focus:outline-none bg-neutral-50/50" />
               @if (childForm.controls['birthDate'].touched && childForm.controls['birthDate'].invalid) {
-                <span class="text-[10px] text-rose-500 font-bold block mt-0.5">Data de nascimento é obrigatória.</span>
+                <span class="text-[10px] text-rose-500 font-bold block mt-0.5">Data é obrigatória.</span>
               }
             </div>
-
             <div>
-              <span class="block text-xs font-bold text-brand-dark/80 mb-1">Gênero Biológico</span>
+              <span class="block text-xs font-bold text-brand-dark/80 mb-1">Gênero</span>
               <div class="grid grid-cols-2 gap-2 mt-0.5">
                 <label class="flex items-center justify-center gap-1.5 p-2 bg-neutral-50 hover:bg-neutral-100 border border-brand-dark/10 rounded-xl cursor-pointer">
                   <input type="radio" value="M" formControlName="gender" class="text-brand-green focus:ring-0">
@@ -986,12 +327,11 @@
             </div>
           </div>
 
-          <!-- Avatar Emoji Carousel Picker -->
           <div>
-            <span class="block text-xs font-bold text-brand-dark/80 mb-1.5">Escolha um Ícone de Identificação (Mascote)</span>
-            <div id="vax-emoji-choices" class="flex items-center gap-2 overflow-x-auto p-2 bg-neutral-50 border border-brand-dark/10 rounded-2xl">
+            <span class="block text-xs font-bold text-brand-dark/80 mb-1.5">Ícone de Identificação</span>
+            <div class="flex items-center gap-2 overflow-x-auto p-2 bg-neutral-50 border border-brand-dark/10 rounded-2xl">
               @for (emoji of avatarOptions; track emoji) {
-                <button id="btn-emoji-{{ emoji }}" type="button" 
+                <button type="button"
                   (click)="childForm.controls['avatar'].setValue(emoji)"
                   [class]="childForm.controls['avatar'].value === emoji ? 'bg-brand-yellow/30 border-brand-orange ring-2 ring-brand-orange/30 scale-110' : 'bg-white border-transparent hover:border-brand-dark/20'"
                   class="text-2xl p-2 rounded-xl border flex-shrink-0 transition-all font-semibold">
@@ -1002,52 +342,42 @@
           </div>
 
           <div class="pt-2 border-t border-brand-dark/5 space-y-3.5">
-            <h4 class="font-extrabold text-[11px] text-brand-dark/60 uppercase tracking-wider">Metadados Físicos Opcionais (Acompanhamento Médico)</h4>
-            
+            <h4 class="font-extrabold text-[11px] text-brand-dark/60 uppercase tracking-wider">Metadados Físicos (opcional)</h4>
             <div class="grid grid-cols-3 gap-3.5">
               <div>
-                <label for="input-child-blood" class="block text-[11px] text-brand-dark/60 mb-0.5">Grupo Sanguíneo</label>
-                <select id="input-child-blood" formControlName="bloodType"
-                  class="w-full px-2.5 py-2 border border-brand-dark/10 rounded-xl bg-neutral-50/50">
+                <label class="block text-[11px] text-brand-dark/60 mb-0.5">Grupo Sanguíneo</label>
+                <select formControlName="bloodType" class="w-full px-2.5 py-2 border border-brand-dark/10 rounded-xl bg-neutral-50/50">
                   <option value="">N/A</option>
-                  <option value="A+">A+</option>
-                  <option value="A-">A-</option>
-                  <option value="B+">B+</option>
-                  <option value="B-">B-</option>
-                  <option value="AB+">AB+</option>
-                  <option value="AB-">AB-</option>
-                  <option value="O+">O+</option>
-                  <option value="O-">O-</option>
+                  <option value="A+">A+</option><option value="A-">A-</option>
+                  <option value="B+">B+</option><option value="B-">B-</option>
+                  <option value="AB+">AB+</option><option value="AB-">AB-</option>
+                  <option value="O+">O+</option><option value="O-">O-</option>
                 </select>
               </div>
-
               <div>
-                <label for="input-child-weight" class="block text-[11px] text-brand-dark/60 mb-0.5">Peso (kg)</label>
-                <input id="input-child-weight" type="number" step="0.1" formControlName="weight" placeholder="Ex: 8.5"
+                <label class="block text-[11px] text-brand-dark/60 mb-0.5">Peso (kg)</label>
+                <input type="number" step="0.1" formControlName="weight" placeholder="Ex: 8.5"
                   class="w-full px-2.5 py-2 border border-brand-dark/10 rounded-xl bg-neutral-50/50" />
               </div>
-
               <div>
-                <label for="input-child-height" class="block text-[11px] text-brand-dark/60 mb-0.5">Altura (cm)</label>
-                <input id="input-child-height" type="number" step="1" formControlName="height" placeholder="Ex: 72"
+                <label class="block text-[11px] text-brand-dark/60 mb-0.5">Altura (cm)</label>
+                <input type="number" step="1" formControlName="height" placeholder="Ex: 72"
                   class="w-full px-2.5 py-2 border border-brand-dark/10 rounded-xl bg-neutral-50/50" />
               </div>
             </div>
           </div>
 
-          <div class="mt-6 pt-4 border-t border-brand-dark/5 flex items-center justify-end gap-3">
-            <button id="btn-cancel-child-d" type="button" (click)="showChildModal.set(false)"
+          <div class="pt-4 border-t border-brand-dark/5 flex items-center justify-end gap-3">
+            <button type="button" (click)="showChildModal.set(false)"
               class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200/80 text-brand-dark font-bold rounded-xl transition">
               Cancelar
             </button>
-            <button id="btn-save-child-d" type="submit" 
+            <button type="submit"
               class="px-5 py-2 bg-brand-green hover:bg-brand-green/90 text-white font-extrabold rounded-xl shadow-md transition">
               {{ editingChild() ? 'Salvar Edições' : 'Criar Caderneta' }}
             </button>
           </div>
-
         </form>
-
       </div>
     }
   </ng-template>

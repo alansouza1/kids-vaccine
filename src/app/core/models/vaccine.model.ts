@@ -1,43 +1,172 @@
-export interface Child {
+export class DosePreset {
   id: string;
   name: string;
-  birthDate: string; // YYYY-MM-DD
-  gender: 'M' | 'F';
-  avatar: string; // Tailored color + emoji/icon name
-  bloodType?: string;
-  weight?: number; // in kg
-  height?: number; // in cm
+  ageMonths: number;
+  gracePeriodMonths: number;
+
+  constructor(data: DosePresetData) {
+    this.id = data.id;
+    this.name = data.name;
+    this.ageMonths = data.ageMonths;
+    this.gracePeriodMonths = data.gracePeriodMonths ?? 1;
+  }
+
+  get key(): string {
+    return this.id;
+  }
 }
 
-export interface DosePreset {
-  id: string; // e.g. 'bcg_single', 'penta_1', 'penta_2'
-  name: string; // e.g. 'Dose Única', '1ª Dose', 'Reforço'
-  ageMonths: number; // Age in months when this dose is recommended
-  gracePeriodMonths?: number; // Optional margin before considered overdue, defaults to 1 month
-}
-
-export interface VaccinePreset {
-  id: string; // e.g. 'bcg', 'penta'
-  name: string; // e.g. 'BCG', 'Pentavalente'
-  fullName: string; // e.g. 'Vacina Bacilo Calmette-Guérin', 'DTPa + HepB + Hib'
-  description: string; // What it prevents, details
-  diseasePrevented: string; // e.g. 'Tuberculose', 'Difteria, Tétano, Coqueluche, Hepatite B, Hib'
-  sideEffects?: string; // Standard side effects
+export class VaccinePreset {
+  id: string;
+  name: string;
+  fullName: string;
+  description: string;
+  diseasePrevented: string;
+  sideEffects?: string;
   doses: DosePreset[];
+
+  constructor(data: VaccinePresetData) {
+    this.id = data.id;
+    this.name = data.name;
+    this.fullName = data.fullName;
+    this.description = data.description;
+    this.diseasePrevented = data.diseasePrevented;
+    this.sideEffects = data.sideEffects;
+    this.doses = data.doses.map(d => new DosePreset(d));
+  }
+
+  get totalDoses(): number {
+    return this.doses.length;
+  }
+
+  getDose(doseId: string): DosePreset | undefined {
+    return this.doses.find(d => d.id === doseId);
+  }
 }
 
-export interface VaccinationRecord {
-  id: string; // childId_vaccineId_doseId
-  childId: string;
-  vaccineId: string;
-  doseId: string;
-  appliedDate?: string; // YYYY-MM-DD if applied
-  appliedPlace?: string; // e.g., 'UBS Centro'
+export class DerivedDoseStatus {
+  doseId!: string;
+  doseName!: string;
+  ageMonths!: number;
+  scheduledDate!: Date;
+  status!: 'applied' | 'pending' | 'overdue';
+  appliedDate?: string;
+  appliedPlace?: string;
   lotNumber?: string;
   vacinatorName?: string;
+
+  constructor(data: DerivedDoseStatusData) {
+    Object.assign(this, data);
+  }
+
+  get isOverdue(): boolean {
+    return this.status === 'overdue';
+  }
+
+  get isApplied(): boolean {
+    return this.status === 'applied';
+  }
+
+  get isPending(): boolean {
+    return this.status === 'pending';
+  }
+
+  get formattedScheduledDate(): string {
+    return this.scheduledDate.toLocaleDateString('pt-BR', {
+      day: '2-digit', month: '2-digit', year: 'numeric'
+    });
+  }
+
+  get cssStatusClass(): string {
+    switch (this.status) {
+      case 'applied': return 'text-brand-green';
+      case 'overdue': return 'text-rose-500';
+      case 'pending': return 'text-brand-orange';
+    }
+  }
+
+  get label(): string {
+    switch (this.status) {
+      case 'applied': return 'Aplicada';
+      case 'overdue': return 'Atrasada';
+      case 'pending': return 'Agendada';
+    }
+  }
 }
 
-export interface DerivedDoseStatus {
+export class ChildVaccineGroup {
+  vaccine!: VaccinePreset;
+  doses!: DerivedDoseStatus[];
+  isFullyApplied!: boolean;
+  hasOverdue!: boolean;
+
+  constructor(data: ChildVaccineGroupData) {
+    this.vaccine = data.vaccine;
+    this.doses = data.doses;
+    this.isFullyApplied = data.isFullyApplied;
+    this.hasOverdue = data.hasOverdue;
+  }
+
+  get appliedDoses(): number {
+    return this.doses.filter(d => d.isApplied).length;
+  }
+
+  get overdueDoses(): number {
+    return this.doses.filter(d => d.isOverdue).length;
+  }
+
+  get pendingDoses(): number {
+    return this.doses.filter(d => d.isPending).length;
+  }
+
+  get vaccineKey(): string {
+    return this.vaccine.id;
+  }
+}
+
+export class VaccineCampaign {
+  id!: string;
+  title!: string;
+  description!: string;
+  targetAgeText!: string;
+  minAgeMonths!: number;
+  maxAgeMonths!: number;
+  startDate!: string;
+  endDate!: string;
+  bannerImage?: string;
+
+  constructor(data: VaccineCampaignData) {
+    Object.assign(this, data);
+  }
+
+  isAgeInRange(ageMonths: number): boolean {
+    return ageMonths >= this.minAgeMonths && ageMonths <= this.maxAgeMonths;
+  }
+
+  get formattedEndDate(): string {
+    const [y, m, d] = this.endDate.split('-');
+    return `${d}/${m}/${y}`;
+  }
+}
+
+export interface DosePresetData {
+  id: string;
+  name: string;
+  ageMonths: number;
+  gracePeriodMonths?: number;
+}
+
+export interface VaccinePresetData {
+  id: string;
+  name: string;
+  fullName: string;
+  description: string;
+  diseasePrevented: string;
+  sideEffects?: string;
+  doses: DosePresetData[];
+}
+
+export interface DerivedDoseStatusData {
   doseId: string;
   doseName: string;
   ageMonths: number;
@@ -49,14 +178,14 @@ export interface DerivedDoseStatus {
   vacinatorName?: string;
 }
 
-export interface ChildVaccineGroup {
+export interface ChildVaccineGroupData {
   vaccine: VaccinePreset;
   doses: DerivedDoseStatus[];
   isFullyApplied: boolean;
   hasOverdue: boolean;
 }
 
-export interface VaccineCampaign {
+export interface VaccineCampaignData {
   id: string;
   title: string;
   description: string;
