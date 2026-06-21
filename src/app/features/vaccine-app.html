@@ -1,5 +1,4 @@
-<!-- Main Container -->
-<div id="vax-root-container" class="min-h-screen flex flex-col font-sans text-brand-dark antialiased bg-brand-light">
+<ion-content>
   
   <!-- Header / Navigation Bar -->
   <header id="vax-main-header" class="sticky top-0 z-40 bg-white border-b border-brand-dark/5 shadow-sm">
@@ -785,45 +784,34 @@
     }
   </main>
 
-  <!-- MOBILE BOTTOM NAVIGATION TAB BAR (Saves space on smaller viewports) -->
-  <footer id="vax-mobile-tab-bar" class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-brand-dark/10 shadow-lg px-4 py-2 flex justify-around items-center">
-    <button id="m-btn-dash" (click)="setTab('dashboard')"
-      [class]="activeTab() === 'dashboard' ? 'text-brand-green font-extrabold' : 'text-brand-dark/60'"
-      class="flex flex-col items-center justify-center p-1.5 transition text-center min-w-[64px]">
+</ion-content>
+
+<ion-footer class="md:hidden">
+  <ion-tab-bar>
+    <ion-tab-button tab="dashboard" (click)="setTab('dashboard')">
       <ion-icon class="text-lg" name="grid"></ion-icon>
-      <span class="text-[9px] mt-0.5">Painel</span>
-    </button>
-
-    <button id="m-btn-timeline" (click)="setTab('timeline')"
-      [class]="activeTab() === 'timeline' ? 'text-brand-green font-extrabold' : 'text-brand-dark/60'"
-      class="flex flex-col items-center justify-center p-1.5 transition text-center min-w-[64px]">
+      <ion-label>Painel</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="timeline" (click)="setTab('timeline')">
       <ion-icon class="text-lg" name="book"></ion-icon>
-      <span class="text-[9px] mt-0.5">Caderneta</span>
-    </button>
-
-    <button id="m-btn-campaigns" (click)="setTab('campaigns')"
-      [class]="activeTab() === 'campaigns' ? 'text-brand-green font-extrabold' : 'text-brand-dark/60'"
-      class="flex flex-col items-center justify-center p-1.5 transition text-center min-w-[64px]">
+      <ion-label>Caderneta</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="campaigns" (click)="setTab('campaigns')">
       <ion-icon class="text-lg" name="megaphone"></ion-icon>
-      <span class="text-[9px] mt-0.5">Campanhas</span>
-    </button>
-
-    <button id="m-btn-children" (click)="setTab('children')"
-      [class]="activeTab() === 'children' ? 'text-brand-green font-extrabold' : 'text-brand-dark/60'"
-      class="flex flex-col items-center justify-center p-1.5 transition text-center min-w-[64px]">
+      <ion-label>Campanhas</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="children" (click)="setTab('children')">
       <ion-icon class="text-lg" name="people"></ion-icon>
-      <span class="text-[9px] mt-0.5">Filhos</span>
-    </button>
-  </footer>
+      <ion-label>Filhos</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-footer>
 
-  <!-- ==================== DIALOG OVERLAYS (MODALS) ==================== -->
-
-  <!-- 1. VACCINE MANUAL DETAIL MODAL OVERLAY -->
-  @if (selectedVaccineForDetail(); as vDetail) {
-    <div id="vax-overlay-manual" class="fixed inset-0 z-50 bg-brand-dark/60 backdrop-blur-sm flex items-center justify-center p-4">
+<ion-modal [isOpen]="selectedVaccineForDetail() !== null" (didDismiss)="selectedVaccineForDetail.set(null)">
+  <ng-template>
+    @if (selectedVaccineForDetail(); as vDetail) {
       <div class="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl relative overflow-hidden animate-fade-in">
         
-        <!-- Top decorative cover accent -->
         <div class="absolute left-0 right-0 top-0 h-2 bg-gradient-to-r from-brand-green to-brand-orange"></div>
 
         <div class="flex items-start justify-between gap-4 mt-1.5">
@@ -872,12 +860,13 @@
         </div>
 
       </div>
-    </div>
-  }
+    }
+  </ng-template>
+</ion-modal>
 
-  <!-- 2. REGISTRATION OF VACCINATION APPLIED RECORD SHEET MODAL -->
-  @if (vaccineToLog(); as logData) {
-    <div id="vax-overlay-log" class="fixed inset-0 z-50 bg-brand-dark/60 backdrop-blur-sm flex items-center justify-center p-4">
+<ion-modal [isOpen]="vaccineToLog() !== null" (didDismiss)="vaccineToLog.set(null)">
+  <ng-template>
+    @if (vaccineToLog(); as logData) {
       <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl relative overflow-hidden">
         
         <div class="absolute left-0 right-0 top-0 h-2 bg-brand-green"></div>
@@ -893,7 +882,6 @@
           </button>
         </div>
 
-        <!-- FORM log sheet -->
         <form [formGroup]="vaxLogForm" (ngSubmit)="saveDoseLog()" class="mt-4 space-y-4 text-xs font-semibold">
           
           <div>
@@ -938,12 +926,13 @@
         </form>
 
       </div>
-    </div>
-  }
+    }
+  </ng-template>
+</ion-modal>
 
-  <!-- 3. CHILD CREATION / EDITING FORM SHEET MODAL -->
-  @if (showChildModal()) {
-    <div id="vax-overlay-child-modal" class="fixed inset-0 z-50 bg-brand-dark/60 backdrop-blur-sm flex items-center justify-center p-4">
+<ion-modal [isOpen]="showChildModal()" (didDismiss)="showChildModal.set(false)">
+  <ng-template>
+    @if (showChildModal()) {
       <div class="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl relative overflow-hidden animate-fade-in max-h-[90vh] overflow-y-auto">
         
         <div class="absolute left-0 right-0 top-0 h-2 bg-gradient-to-r from-brand-yellow to-brand-orange"></div>
@@ -1012,7 +1001,6 @@
             </div>
           </div>
 
-          <!-- Additional physical parameters -->
           <div class="pt-2 border-t border-brand-dark/5 space-y-3.5">
             <h4 class="font-extrabold text-[11px] text-brand-dark/60 uppercase tracking-wider">Metadados Físicos Opcionais (Acompanhamento Médico)</h4>
             
@@ -1061,7 +1049,6 @@
         </form>
 
       </div>
-    </div>
-  }
-
-</div>
+    }
+  </ng-template>
+</ion-modal>

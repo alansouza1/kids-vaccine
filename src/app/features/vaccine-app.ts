@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { IonIcon } from '@ionic/angular/standalone';
+import { IonIcon, IonContent, IonFooter, IonTabBar, IonTabButton, IonLabel, IonModal } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
   shieldHalf, grid, book, megaphone, people, refresh, add, addCircleOutline,
@@ -17,7 +17,7 @@ import { Child, VaccinePreset, DerivedDoseStatus, ChildVaccineGroup } from '../c
   selector: 'app-vaccine-app',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, ReactiveFormsModule, IonIcon],
+  imports: [CommonModule, ReactiveFormsModule, IonIcon, IonContent, IonFooter, IonTabBar, IonTabButton, IonLabel, IonModal],
   templateUrl: './vaccine-app.html',
   styleUrls: []
 })
