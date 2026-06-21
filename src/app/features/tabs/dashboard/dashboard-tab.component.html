@@ -1,49 +1,4 @@
 @let currentChild = vaxService.activeChild()!;
-@let stats = vaxService.activeChildStats();
-
-<section id="vax-active-child-stats-bar" class="mb-6 bg-white rounded-2xl p-5 border border-brand-dark/5 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative overflow-hidden">
-  <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-brand-green"></div>
-
-  <div class="flex items-center gap-4">
-    <div class="w-12 h-12 rounded-full bg-brand-green/10 flex items-center justify-center text-4xl select-none">
-      {{ currentChild.avatar }}
-    </div>
-    <div>
-      <h2 class="text-xl font-bold font-display tracking-tight text-brand-dark">Você está visualizando a Caderneta de:</h2>
-      <p class="text-sm text-brand-dark/80 font-medium">
-        <span class="font-bold text-brand-green">{{ currentChild.name }}</span> — {{ currentChild.getFormattedAge() }}
-      </p>
-    </div>
-  </div>
-
-  <div class="flex flex-col sm:flex-row items-center gap-6">
-    <div class="flex items-center gap-3">
-      <app-progress-circle [progress]="stats.progress" [size]="56"></app-progress-circle>
-      <div>
-        <p class="text-[10px] uppercase font-bold text-brand-dark/50 tracking-wider">Progresso Vacinal</p>
-        <h4 class="text-sm font-black text-brand-dark mt-0.5">Doses Tomadas</h4>
-        <p class="text-[11px] text-brand-dark/60 font-semibold">{{ stats.appliedDoses }} de {{ stats.totalDoses }} cadastradas</p>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-3 gap-2 w-full sm:w-auto">
-      <div class="bg-brand-green/10 border border-brand-green/20 px-3 py-1.5 rounded-xl text-center min-w-[70px]">
-        <span class="block text-base font-bold text-brand-green">{{ stats.appliedDoses }}</span>
-        <span class="text-[9px] uppercase font-bold text-brand-dark/60">OK</span>
-      </div>
-      <div [class]="stats.overdueDoses > 0 ? 'bg-rose-50 border-rose-200' : 'bg-brand-dark/5 border-transparent'"
-        class="border px-3 py-1.5 rounded-xl text-center min-w-[70px]">
-        <span [class]="stats.overdueDoses > 0 ? 'text-rose-500 font-extrabold animate-pulse' : 'text-brand-dark/40'"
-          class="block text-base font-bold">{{ stats.overdueDoses }}</span>
-        <span class="text-[9px] uppercase font-bold text-brand-dark/60">Em atraso</span>
-      </div>
-      <div class="bg-brand-orange/10 border border-brand-orange/20 px-3 py-1.5 rounded-xl text-center min-w-[70px]">
-        <span class="block text-base font-bold text-brand-orange">{{ stats.pendingDoses }}</span>
-        <span class="text-[9px] uppercase font-bold text-brand-dark/60">Próximas</span>
-      </div>
-    </div>
-  </div>
-</section>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
   <div class="lg:col-span-2 space-y-6">

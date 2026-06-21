@@ -18,6 +18,7 @@ import { TimelineTabComponent } from './tabs/timeline/timeline-tab.component';
 import { CampaignsTabComponent } from './tabs/campaigns/campaigns-tab.component';
 import { ChildrenTabComponent } from './tabs/children/children-tab.component';
 import { ChildCardComponent } from '../shared/components/child-card/child-card.component';
+import { ProgressCircleComponent } from '../shared/components/progress-circle/progress-circle.component';
 
 @Component({
   selector: 'app-vaccine-app',
@@ -27,7 +28,7 @@ import { ChildCardComponent } from '../shared/components/child-card/child-card.c
     CommonModule, ReactiveFormsModule, IonIcon, IonContent, IonFooter,
     IonTabBar, IonTabButton, IonLabel, IonModal,
     DashboardTabComponent, TimelineTabComponent, CampaignsTabComponent,
-    ChildrenTabComponent, ChildCardComponent
+    ChildrenTabComponent, ChildCardComponent, ProgressCircleComponent
   ],
   templateUrl: './vaccine-app.html'
 })

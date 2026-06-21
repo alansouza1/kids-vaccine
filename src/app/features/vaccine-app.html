@@ -104,6 +104,51 @@
         </button>
       </div>
     } @else {
+      <!-- Active Child Stats Bar -->
+      <section id="vax-active-child-stats-bar" class="mb-6 bg-white rounded-2xl p-5 border border-brand-dark/5 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative overflow-hidden">
+        <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-brand-green"></div>
+
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-brand-green/10 flex items-center justify-center text-4xl select-none">
+            {{ vaxService.activeChild()!.avatar }}
+          </div>
+          <div>
+            <h2 class="text-xl font-bold font-display tracking-tight text-brand-dark">Você está visualizando a Caderneta de:</h2>
+            <p class="text-sm text-brand-dark/80 font-medium">
+              <span class="font-bold text-brand-green">{{ vaxService.activeChild()!.name }}</span> — {{ vaxService.activeChild()!.getFormattedAge() }}
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-6">
+          <div class="flex items-center gap-3">
+            <app-progress-circle [progress]="vaxService.activeChildStats().progress" [size]="56"></app-progress-circle>
+            <div>
+              <p class="text-[10px] uppercase font-bold text-brand-dark/50 tracking-wider">Progresso Vacinal</p>
+              <h4 class="text-sm font-black text-brand-dark mt-0.5">Doses Tomadas</h4>
+              <p class="text-[11px] text-brand-dark/60 font-semibold">{{ vaxService.activeChildStats().appliedDoses }} de {{ vaxService.activeChildStats().totalDoses }} cadastradas</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 w-full sm:w-auto">
+            <div class="bg-brand-green/10 border border-brand-green/20 px-3 py-1.5 rounded-xl text-center min-w-[70px]">
+              <span class="block text-base font-bold text-brand-green">{{ vaxService.activeChildStats().appliedDoses }}</span>
+              <span class="text-[9px] uppercase font-bold text-brand-dark/60">OK</span>
+            </div>
+            <div [class]="vaxService.activeChildStats().overdueDoses > 0 ? 'bg-rose-50 border-rose-200' : 'bg-brand-dark/5 border-transparent'"
+              class="border px-3 py-1.5 rounded-xl text-center min-w-[70px]">
+              <span [class]="vaxService.activeChildStats().overdueDoses > 0 ? 'text-rose-500 font-extrabold animate-pulse' : 'text-brand-dark/40'"
+                class="block text-base font-bold">{{ vaxService.activeChildStats().overdueDoses }}</span>
+              <span class="text-[9px] uppercase font-bold text-brand-dark/60">Em atraso</span>
+            </div>
+            <div class="bg-brand-orange/10 border border-brand-orange/20 px-3 py-1.5 rounded-xl text-center min-w-[70px]">
+              <span class="block text-base font-bold text-brand-orange">{{ vaxService.activeChildStats().pendingDoses }}</span>
+              <span class="text-[9px] uppercase font-bold text-brand-dark/60">Próximas</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Tab: Dashboard -->
       @if (activeTab() === 'dashboard') {
         <app-dashboard-tab
@@ -170,9 +215,9 @@
 
 <ion-modal [isOpen]="selectedVaccineForDetail() !== null" (didDismiss)="selectedVaccineForDetail.set(null)">
   <ng-template>
-    @if (selectedVaccineForDetail(); as vDetail) {
-      <div class="p-6 relative overflow-hidden">
-        <div class="absolute left-0 right-0 top-0 h-2 bg-gradient-to-r from-brand-green to-brand-orange"></div>
+      @if (selectedVaccineForDetail(); as vDetail) {
+        <div class="p-6 relative overflow-hidden">
+          <div class="absolute left-0 right-0 top-0 h-2 bg-gradient-to-r from-brand-green to-brand-orange"></div>
         <div class="flex items-start justify-between gap-4 mt-1.5">
           <div>
             <h3 class="text-lg font-extrabold leading-tight tracking-tight text-brand-dark font-display">{{ vDetail.name }}</h3>
@@ -220,9 +265,9 @@
 
 <ion-modal [isOpen]="vaccineToLog() !== null" (didDismiss)="vaccineToLog.set(null)">
   <ng-template>
-    @if (vaccineToLog(); as logData) {
-      <div class="p-6 relative overflow-hidden">
-        <div class="absolute left-0 right-0 top-0 h-2 bg-brand-green"></div>
+      @if (vaccineToLog(); as logData) {
+        <div class="p-6 relative overflow-hidden">
+          <div class="absolute left-0 right-0 top-0 h-2 bg-brand-green"></div>
         <div class="flex items-start justify-between gap-4 mt-1">
           <div>
             <h3 class="text-base font-bold font-display text-brand-dark">Registrar Aplicação</h3>
@@ -277,9 +322,9 @@
 
 <ion-modal [isOpen]="showChildModal()" (didDismiss)="showChildModal.set(false)">
   <ng-template>
-    @if (showChildModal()) {
-      <div class="p-6 relative overflow-hidden max-h-[90vh] overflow-y-auto">
-        <div class="absolute left-0 right-0 top-0 h-2 bg-gradient-to-r from-brand-yellow to-brand-orange"></div>
+      @if (showChildModal()) {
+        <div class="p-6 relative overflow-hidden">
+          <div class="absolute left-0 right-0 top-0 h-2 bg-gradient-to-r from-brand-yellow to-brand-orange"></div>
         <div class="flex items-start justify-between gap-4 mt-1">
           <div>
             <h3 class="text-lg font-bold font-display text-brand-dark">

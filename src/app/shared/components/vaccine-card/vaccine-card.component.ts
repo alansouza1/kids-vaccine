@@ -8,7 +8,8 @@ import { StatusBadgeComponent } from '../status-badge/status-badge.component';
   selector: 'app-vaccine-card',
   standalone: true,
   imports: [CommonModule, IonIcon, StatusBadgeComponent],
-  templateUrl: './vaccine-card.component.html'
+  templateUrl: './vaccine-card.component.html',
+  styles: [`:host { display: block; height: 100%; }`]
 })
 export class VaccineCardComponent {
   @Input() group!: ChildVaccineGroup;
