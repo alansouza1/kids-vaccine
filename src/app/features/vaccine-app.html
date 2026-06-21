@@ -8,7 +8,7 @@
       <!-- Brand Logo & Title -->
       <div id="vax-brand-logo-group" class="flex items-center gap-2.5">
         <div class="w-10 h-10 rounded-xl bg-brand-green flex items-center justify-center shadow-md animate-bounce duration-1000">
-          <mat-icon class="text-white text-2xl">health_and_safety</mat-icon>
+          <ion-icon class="text-white text-2xl" name="shield-half"></ion-icon>
         </div>
         <div>
           <h1 class="text-xl font-bold tracking-tight text-brand-dark font-display leading-tight">Caderneta Infantil</h1>
@@ -21,25 +21,25 @@
         <button id="nav-btn-dash" (click)="setTab('dashboard')"
           [class]="activeTab() === 'dashboard' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
           class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
-          <mat-icon class="text-sm">dashboard</mat-icon>
+          <ion-icon class="text-sm" name="grid"></ion-icon>
           Painel
         </button>
         <button id="nav-btn-timeline" (click)="setTab('timeline')"
           [class]="activeTab() === 'timeline' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
           class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
-          <mat-icon class="text-sm">menu_book</mat-icon>
+          <ion-icon class="text-sm" name="book"></ion-icon>
           Caderneta
         </button>
         <button id="nav-btn-campaigns" (click)="setTab('campaigns')"
           [class]="activeTab() === 'campaigns' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
           class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
-          <mat-icon class="text-sm">campaign</mat-icon>
+          <ion-icon class="text-sm" name="megaphone"></ion-icon>
           Campanhas
         </button>
         <button id="nav-btn-children" (click)="setTab('children')"
           [class]="activeTab() === 'children' ? 'bg-white text-brand-dark font-bold shadow-sm' : 'text-brand-dark/70 hover:bg-white/40'"
           class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs transition duration-200">
-          <mat-icon class="text-sm">groups</mat-icon>
+          <ion-icon class="text-sm" name="people"></ion-icon>
           Meus Filhos
         </button>
       </div>
@@ -49,11 +49,11 @@
         <button id="btn-reset-db" (click)="resetDatabase()" 
           title="Redefinir Dados Fictícios"
           class="flex items-center justify-center p-2 rounded-lg text-brand-dark/60 hover:text-brand-dark hover:bg-brand-dark/5 transition">
-          <mat-icon>restart_alt</mat-icon>
+          <ion-icon name="refresh"></ion-icon>
         </button>
         <button id="btn-add-kid-header" (click)="openAddChildModal()" 
           class="flex items-center gap-1.5 px-3 py-1.5 bg-brand-green text-white font-medium text-xs rounded-lg hover:shadow-md transition">
-          <mat-icon class="text-sm">add</mat-icon>
+          <ion-icon class="text-sm" name="add"></ion-icon>
           <span class="hidden sm:inline">Adicionar Filho</span>
         </button>
       </div>
@@ -68,7 +68,7 @@
     <section id="vax-child-selector-section" class="mb-6">
       <div class="flex items-center justify-between mb-3">
         <h2 class="text-sm font-bold uppercase tracking-wider text-brand-dark/50 flex items-center gap-1.5">
-          <mat-icon class="text-xs">child_care</mat-icon>
+          <ion-icon class="text-xs" name="person"></ion-icon>
           Selecione a Criança para Acompanhar
         </h2>
         
@@ -116,7 +116,7 @@
               <!-- Top right active selection indicator -->
               @if (vaxService.activeChildId() === kid.id) {
                 <div class="w-6 h-6 rounded-full bg-brand-green flex items-center justify-center text-white shadow">
-                  <mat-icon class="text-base font-bold">check</mat-icon>
+                  <ion-icon class="text-base font-bold" name="checkmark"></ion-icon>
                 </div>
               }
             </div>
@@ -134,19 +134,19 @@
                 <!-- Dynamic display of missing doses -->
                 @if (isArthur) {
                   <span class="flex items-center gap-1 text-brand-orange">
-                    <mat-icon class="text-sm">warning</mat-icon> Pendências
+                    <ion-icon class="text-sm" name="warning"></ion-icon> Pendências
                   </span>
                 } @else if (isSofia) {
                   <span class="flex items-center gap-1 text-rose-500 font-bold bg-rose-50 px-1.5 py-0.5 rounded">
-                    <mat-icon class="text-sm text-rose-500">error</mat-icon> 2 EM ATRASO
+                    <ion-icon class="text-sm text-rose-500" name="alert-circle"></ion-icon> 2 EM ATRASO
                   </span>
                 } @else if (isGabriel) {
                   <span class="flex items-center gap-1 text-amber-600">
-                    <mat-icon class="text-sm">schedule</mat-icon> Reforços Devidos
+                    <ion-icon class="text-sm" name="time"></ion-icon> Reforços Devidos
                   </span>
                 } @else {
                   <span class="flex items-center gap-1 text-emerald-600">
-                    <mat-icon class="text-sm">verified</mat-icon> Em Dia
+                    <ion-icon name="checkmark-circle" class="text-sm"></ion-icon> Em Dia
                   </span>
                 }
               </div>
@@ -163,7 +163,7 @@
         @if (vaxService.children().length === 0) {
           <button type="button" id="vax-empty-children-prompt" (click)="openAddChildModal()" 
             class="p-6 rounded-2xl border border-dashed border-brand-dark/20 flex flex-col items-center justify-center text-center cursor-pointer hover:border-brand-green/80 hover:bg-brand-green/5 transition duration-200 text-left w-full block">
-            <mat-icon class="text-3xl text-brand-dark/40 mb-2">add_circle_outline</mat-icon>
+            <ion-icon class="text-3xl text-brand-dark/40 mb-2" name="add-circle-outline"></ion-icon>
             <h3 class="font-bold text-sm text-brand-dark">Sem crianças cadastradas</h3>
             <p class="text-xs text-brand-dark/60 mt-1">Clique aqui para adicionar a primeira criança.</p>
           </button>
@@ -266,7 +266,7 @@
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-2">
                   <span class="flex items-center justify-center w-8 h-8 rounded-full bg-rose-100 text-rose-500 animate-pulse">
-                    <mat-icon>warning</mat-icon>
+                    <ion-icon name="warning"></ion-icon>
                   </span>
                   <div>
                     <h3 class="font-bold text-base tracking-tight text-brand-dark">Situação de Cobertura Urgente</h3>
@@ -289,7 +289,7 @@
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-rose-50/70 hover:bg-rose-50 border border-rose-100 rounded-2xl gap-3 transition">
                       <div class="flex items-start gap-3">
                         <div class="w-8 h-8 rounded-lg bg-rose-100 text-rose-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <mat-icon class="text-lg">error_outline</mat-icon>
+                          <ion-icon class="text-lg" name="alert-circle-outline"></ion-icon>
                         </div>
                         <div>
                           <div class="flex items-center gap-1.5 flex-wrap">
@@ -298,7 +298,7 @@
                           </div>
                           <p class="text-xs font-semibold text-brand-dark/70 mt-1">Previne: {{ alert.vaccine.diseasePrevented }}</p>
                           <p class="text-[11px] text-rose-600 font-extrabold flex items-center gap-1 mt-0.5">
-                            <mat-icon class="text-xs">calendar_month</mat-icon>
+                            <ion-icon class="text-xs" name="calendar"></ion-icon>
                             Deveria ter sido aplicada em: {{ formatDoseDate(alert.dose.scheduledDate) }} (Idade: {{ alert.dose.ageMonths }} meses)
                           </p>
                         </div>
@@ -308,7 +308,7 @@
                       <button id="btn-log-overdue-{{ alert.vaccine.id }}-{{ alert.dose.doseId }}" 
                         (click)="openLogDoseModal(alert.vaccine, alert.dose)"
                         class="flex items-center justify-center gap-1.5 px-4 py-2 bg-brand-green hover:bg-brand-green/90 text-white font-semibold text-xs rounded-xl shadow-sm self-start sm:self-center transition whitespace-nowrap">
-                        <mat-icon class="text-sm">check_circle</mat-icon>
+                        <ion-icon class="text-sm" name="checkmark-circle"></ion-icon>
                         Registrar Aplicação
                       </button>
                     </div>
@@ -322,7 +322,7 @@
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-2">
                   <span class="flex items-center justify-center w-8 h-8 rounded-full bg-brand-orange/10 text-brand-orange">
-                    <mat-icon>schedule</mat-icon>
+                    <ion-icon name="time"></ion-icon>
                   </span>
                   <div>
                     <h3 class="font-bold text-base tracking-tight text-brand-dark">Estrutura de Planejamento (Próximas Doses)</h3>
@@ -346,7 +346,7 @@
                     <div class="flex items-center justify-between p-3.5 bg-neutral-50 hover:bg-neutral-100/70 border border-brand-dark/5 rounded-xl transition">
                       <div class="flex items-start gap-3">
                         <div class="w-8 h-8 rounded-lg bg-brand-orange/10 text-brand-orange flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <mat-icon class="text-lg">pending_actions</mat-icon>
+                          <ion-icon class="text-lg" name="time"></ion-icon>
                         </div>
                         <div>
                           <div class="flex items-center gap-1.5">
@@ -378,7 +378,7 @@
               <div class="flex items-center justify-between mb-4 pb-2 border-b border-brand-dark/5">
                 <div class="flex items-center gap-2">
                   <span class="flex items-center justify-center w-8 h-8 rounded-full bg-brand-yellow/20 text-amber-500">
-                    <mat-icon>campaign</mat-icon>
+                    <ion-icon name="megaphone"></ion-icon>
                   </span>
                   <div>
                     <h3 class="font-bold text-base tracking-tight text-brand-dark">Campanhas Recomendadas</h3>
@@ -413,11 +413,11 @@
                         
                         <div class="mt-3 pt-2.5 border-t border-brand-dark/5 space-y-1 text-[10px] text-brand-dark/60 font-semibold">
                           <p class="flex items-center gap-1">
-                            <mat-icon class="text-sm">baby_changing_station</mat-icon> 
+                            <ion-icon class="text-sm" name="person"></ion-icon> 
                             Público: {{ camp.targetAgeText }}
                           </p>
                           <p class="flex items-center gap-1 text-brand-green font-bold">
-                            <mat-icon class="text-sm">event</mat-icon> 
+                            <ion-icon class="text-sm" name="calendar"></ion-icon> 
                             Válido até: {{ formatRawDate(camp.endDate) }}
                           </p>
                         </div>
@@ -482,7 +482,7 @@
             <!-- Dynamic Search input -->
             <div class="relative w-full md:max-w-xs flex-shrink-0">
               <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-brand-dark/40">
-                <mat-icon class="text-base">search</mat-icon>
+                <ion-icon class="text-base" name="search"></ion-icon>
               </span>
               <input id="input-search-vax" type="text"
                 [value]="timelineSearchQuery()"
@@ -521,11 +521,11 @@
                           <!-- Coverage Badge -->
                           @if (vGroup.isFullyApplied) {
                             <span class="text-[9px] font-black bg-emerald-150 text-white uppercase px-1.5 py-0.5 rounded-full flex items-center bg-emerald-600 gap-0.5">
-                              <mat-icon class="text-[10px] leading-none">verified</mat-icon> Completo
+                              <ion-icon class="text-[10px] leading-none" name="checkmark-circle"></ion-icon> Completo
                             </span>
                           } @else if (vGroup.hasOverdue) {
                             <span class="text-[9px] font-black bg-rose-500 text-white uppercase px-1.5 py-0.5 rounded-full flex items-center gap-0.5 animate-pulse">
-                              <mat-icon class="text-[10px] leading-none animate-bounce">priority_high</mat-icon> Atrasada
+                              <ion-icon class="text-[10px] leading-none animate-bounce" name="alert-circle"></ion-icon> Atrasada
                             </span>
                           }
                         </div>
@@ -537,12 +537,12 @@
                         (click)="selectedVaccineForDetail.set(vGroup.vaccine)"
                         title="Ver manual de bula e efeitos colaterais"
                         class="flex items-center justify-center w-7 h-7 bg-brand-dark/5 hover:bg-brand-dark/10 rounded-full transition text-brand-dark/60 hover:text-brand-dark">
-                        <mat-icon class="text-sm">info</mat-icon>
+                        <ion-icon class="text-sm" name="information-circle"></ion-icon>
                       </button>
                     </div>
 
                     <p class="text-xs text-brand-dark/70 font-semibold mt-2.5 flex items-start gap-1">
-                      <mat-icon class="text-base text-brand-green flex-shrink-0">shield</mat-icon>
+                      <ion-icon class="text-base text-brand-green flex-shrink-0" name="shield"></ion-icon>
                       <span>Previne: <span class="font-normal text-brand-dark/80">{{ vGroup.vaccine.diseasePrevented }}</span></span>
                     </p>
                   </div>
@@ -561,17 +561,17 @@
                           
                           @if (dose.status === 'applied') {
                             <p class="text-[10px] text-brand-green font-bold flex items-center gap-0.5 mt-0.5">
-                              <mat-icon class="text-[11px] leading-none">check_circle</mat-icon>
+                              <ion-icon class="text-[11px] leading-none" name="checkmark-circle"></ion-icon>
                               Aplicada em {{ formatRawDate(dose.appliedDate) }}
                             </p>
                           } @else if (dose.status === 'overdue') {
                             <p class="text-[10px] text-rose-500 font-extrabold flex items-center gap-0.5 mt-0.5">
-                              <mat-icon class="text-[11px] leading-none">warning</mat-icon>
+                              <ion-icon class="text-[11px] leading-none" name="warning"></ion-icon>
                               Atrasada (Prevista: {{ formatDoseDate(dose.scheduledDate) }})
                             </p>
                           } @else {
                             <p class="text-[10px] text-brand-orange flex items-center gap-0.5 mt-0.5">
-                              <mat-icon class="text-[11px] leading-none">schedule</mat-icon>
+                              <ion-icon class="text-[11px] leading-none" name="time"></ion-icon>
                               Agendada para: {{ formatDoseDate(dose.scheduledDate) }}
                             </p>
                           }
@@ -585,7 +585,7 @@
                               (click)="undoDose(vGroup.vaccine.id, dose.doseId)"
                               title="Remover assinatura de dose"
                               class="w-6 h-6 rounded bg-neutral-100 hover:bg-rose-100/70 text-brand-dark hover:text-rose-500 flex items-center justify-center transition border border-brand-dark/5">
-                              <mat-icon class="text-xs">undo</mat-icon>
+                              <ion-icon class="text-xs" name="arrow-undo"></ion-icon>
                             </button>
                             <span class="text-[10px] text-white bg-brand-green/95 px-2 py-0.5 rounded shadow-sm text-center select-none font-bold">Ok</span>
                           } @else {
@@ -604,7 +604,7 @@
                   <!-- Quick Expand Card Info bar -->
                   <div class="bg-white/60 p-3 text-center">
                     <p class="text-[10px] text-brand-dark/50 font-semibold tracking-wide flex items-center justify-center gap-1">
-                      <mat-icon class="text-xs">healing</mat-icon>
+                      <ion-icon class="text-xs" name="bandage"></ion-icon>
                       Bula recomendada pelo Ministério da Saúde
                     </p>
                   </div>
@@ -662,18 +662,18 @@
 
                   <div class="mt-4 pt-4 border-t border-brand-dark/5 space-y-2 text-[11px] text-brand-dark/70 font-semibold bg-neutral-50/50 p-3 rounded-xl">
                     <div class="flex items-center gap-1.5 flex-wrap">
-                      <mat-icon class="text-sm text-brand-green">people_outline</mat-icon>
+                      <ion-icon class="text-sm text-brand-green" name="people-outline"></ion-icon>
                       <span>Publico-Alvo: <span class="font-normal text-brand-dark/80">{{ campaign.targetAgeText }}</span></span>
                     </div>
 
                     <div class="flex items-center gap-1.5 flex-wrap">
-                      <mat-icon class="text-sm text-brand-orange">date_range</mat-icon>
+                      <ion-icon class="text-sm text-brand-orange" name="calendar"></ion-icon>
                       <span>Período da Ação: <span class="font-normal text-brand-dark/80">{{ formatRawDate(campaign.startDate) }} até {{ formatRawDate(campaign.endDate) }}</span></span>
                     </div>
 
                     @if (isMatched) {
                       <div class="flex items-start gap-1 p-2 bg-brand-green/10 border border-brand-green/20 rounded-lg text-brand-green">
-                        <mat-icon class="text-[14px] mt-0.5">check_circle</mat-icon>
+                        <ion-icon class="text-[14px] mt-0.5" name="checkmark-circle"></ion-icon>
                         <p class="text-[10px] font-bold">O(A) {{ currentChild.name }} está qualificado(a) de acordo com a faixa etária!</p>
                       </div>
                     }
@@ -698,7 +698,7 @@
             
             <button id="btn-add-child-tab" (click)="openAddChildModal()" 
               class="flex items-center gap-1 px-4 py-2 bg-brand-green text-white text-xs font-bold rounded-xl hover:shadow shadow-sm transition">
-              <mat-icon class="text-sm">add</mat-icon>
+              <ion-icon class="text-sm" name="add"></ion-icon>
               Adicionar Filho
             </button>
           </div>
@@ -755,21 +755,21 @@
                   <button id="btn-delete-kid-f-{{ kid.id }}"
                     (click)="deleteChild(kid.id)"
                     class="flex items-center justify-center gap-1 px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100/70 hover:text-rose-700 rounded-lg text-[11px] font-bold transition">
-                    <mat-icon class="text-xs">delete</mat-icon> Remover
+                    <ion-icon class="text-xs" name="trash"></ion-icon> Remover
                   </button>
 
                   <div class="flex items-center gap-2">
                     <button id="btn-edit-kid-f-{{ kid.id }}"
                       (click)="openEditChildModal(kid)"
                       class="flex items-center justify-center gap-1 px-3 py-1.5 bg-neutral-100 text-brand-dark hover:bg-neutral-200/70 rounded-lg text-[11px] font-bold transition">
-                      <mat-icon class="text-xs">edit</mat-icon> Editar
+                      <ion-icon class="text-xs" name="create"></ion-icon> Editar
                     </button>
 
                     <button id="btn-sel-kid-f-{{ kid.id }}"
                       (click)="selectChild(kid.id)"
                       [disabled]="vaxService.activeChildId() === kid.id"
                       class="flex items-center justify-center gap-1 px-3 py-1.5 bg-brand-green disabled:bg-neutral-100 text-white disabled:text-brand-dark/30 rounded-lg text-[11px] font-bold transition">
-                      <mat-icon class="text-xs">check</mat-icon> 
+                      <ion-icon class="text-xs" name="checkmark"></ion-icon> 
                       {{ vaxService.activeChildId() === kid.id ? 'Selecionado' : 'Selecionar' }}
                     </button>
                   </div>
@@ -790,28 +790,28 @@
     <button id="m-btn-dash" (click)="setTab('dashboard')"
       [class]="activeTab() === 'dashboard' ? 'text-brand-green font-extrabold' : 'text-brand-dark/60'"
       class="flex flex-col items-center justify-center p-1.5 transition text-center min-w-[64px]">
-      <mat-icon class="text-lg">dashboard</mat-icon>
+      <ion-icon class="text-lg" name="grid"></ion-icon>
       <span class="text-[9px] mt-0.5">Painel</span>
     </button>
 
     <button id="m-btn-timeline" (click)="setTab('timeline')"
       [class]="activeTab() === 'timeline' ? 'text-brand-green font-extrabold' : 'text-brand-dark/60'"
       class="flex flex-col items-center justify-center p-1.5 transition text-center min-w-[64px]">
-      <mat-icon class="text-lg">menu_book</mat-icon>
+      <ion-icon class="text-lg" name="book"></ion-icon>
       <span class="text-[9px] mt-0.5">Caderneta</span>
     </button>
 
     <button id="m-btn-campaigns" (click)="setTab('campaigns')"
       [class]="activeTab() === 'campaigns' ? 'text-brand-green font-extrabold' : 'text-brand-dark/60'"
       class="flex flex-col items-center justify-center p-1.5 transition text-center min-w-[64px]">
-      <mat-icon class="text-lg">campaign</mat-icon>
+      <ion-icon class="text-lg" name="megaphone"></ion-icon>
       <span class="text-[9px] mt-0.5">Campanhas</span>
     </button>
 
     <button id="m-btn-children" (click)="setTab('children')"
       [class]="activeTab() === 'children' ? 'text-brand-green font-extrabold' : 'text-brand-dark/60'"
       class="flex flex-col items-center justify-center p-1.5 transition text-center min-w-[64px]">
-      <mat-icon class="text-lg">groups</mat-icon>
+      <ion-icon class="text-lg" name="people"></ion-icon>
       <span class="text-[9px] mt-0.5">Filhos</span>
     </button>
   </footer>
@@ -833,7 +833,7 @@
           </div>
           <button id="btn-close-detail" (click)="selectedVaccineForDetail.set(null)"
             class="flex items-center justify-center p-1 hover:bg-neutral-100 rounded-lg text-brand-dark/40 hover:text-brand-dark">
-            <mat-icon>close</mat-icon>
+            <ion-icon name="close"></ion-icon>
           </button>
         </div>
 
@@ -841,7 +841,7 @@
           <div>
             <p class="text-[10px] uppercase font-bold text-brand-dark/40 tracking-wider">Patologias Prevenidas</p>
             <p class="text-sm font-bold text-brand-green mt-0.5 flex items-center gap-1">
-              <mat-icon class="text-sm leading-none">shield</mat-icon>
+              <ion-icon class="text-sm leading-none" name="shield"></ion-icon>
               {{ vDetail.diseasePrevented }}
             </p>
           </div>
@@ -889,7 +889,7 @@
           </div>
           <button id="btn-close-log" (click)="vaccineToLog.set(null)"
             class="flex items-center justify-center p-1 hover:bg-neutral-100 rounded-lg text-brand-dark/40">
-            <mat-icon>close</mat-icon>
+            <ion-icon name="close"></ion-icon>
           </button>
         </div>
 
@@ -957,7 +957,7 @@
           </div>
           <button id="btn-close-child-m" (click)="showChildModal.set(false)"
             class="flex items-center justify-center p-1 hover:bg-neutral-100 rounded-lg text-brand-dark/40">
-            <mat-icon>close</mat-icon>
+            <ion-icon name="close"></ion-icon>
           </button>
         </div>
 

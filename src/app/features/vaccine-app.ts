@@ -1,7 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { 
+  shieldHalf, grid, book, megaphone, people, refresh, add, addCircleOutline,
+  checkmark, warning, alertCircle, time, checkmarkCircle, 
+  alertCircleOutline, calendar, person, peopleOutline, 
+  search, informationCircle, shield, arrowUndo, bandage, 
+  trash, create, close 
+} from 'ionicons/icons';
 import { VaccineService } from '../core/services/vaccine.service';
 import { Child, VaccinePreset, DerivedDoseStatus, ChildVaccineGroup } from '../core/models/vaccine.model';
 
@@ -9,12 +17,42 @@ import { Child, VaccinePreset, DerivedDoseStatus, ChildVaccineGroup } from '../c
   selector: 'app-vaccine-app',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, ReactiveFormsModule, MatIconModule],
+  imports: [CommonModule, ReactiveFormsModule, IonIcon],
   templateUrl: './vaccine-app.html',
   styleUrls: []
 })
 export class VaccineApp implements OnInit {
   protected readonly vaxService = inject(VaccineService);
+
+  constructor() {
+    addIcons({
+      'shield-half': shieldHalf,
+      'grid': grid,
+      'book': book,
+      'megaphone': megaphone,
+      'people': people,
+      'refresh': refresh,
+      'add': add,
+      'add-circle-outline': addCircleOutline,
+      'checkmark': checkmark,
+      'warning': warning,
+      'alert-circle': alertCircle,
+      'time': time,
+      'checkmark-circle': checkmarkCircle,
+      'alert-circle-outline': alertCircleOutline,
+      'calendar': calendar,
+      'person': person,
+      'people-outline': peopleOutline,
+      'search': search,
+      'information-circle': informationCircle,
+      'shield': shield,
+      'arrow-undo': arrowUndo,
+      'bandage': bandage,
+      'trash': trash,
+      'create': create,
+      'close': close
+    });
+  }
 
   // Active Tab state
   activeTab = signal<'dashboard' | 'timeline' | 'campaigns' | 'children'>('dashboard');
