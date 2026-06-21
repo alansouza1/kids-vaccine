@@ -3,12 +3,11 @@ import { CommonModule } from '@angular/common';
 import { IonIcon } from '@ionic/angular/standalone';
 import { VaccineService } from '../../../core/services/vaccine.service';
 import { VaccinePreset, DerivedDoseStatus } from '../../../core/models/vaccine.model';
-import { ProgressCircleComponent } from '../../../shared/components/progress-circle/progress-circle.component';
 
 @Component({
   selector: 'app-dashboard-tab',
   standalone: true,
-  imports: [CommonModule, IonIcon, ProgressCircleComponent],
+  imports: [CommonModule, IonIcon],
   templateUrl: './dashboard-tab.component.html'
 })
 export class DashboardTabComponent {
