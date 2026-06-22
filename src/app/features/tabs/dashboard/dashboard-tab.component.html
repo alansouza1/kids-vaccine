@@ -123,10 +123,8 @@
         <div class="space-y-4">
           @for (camp of vaxService.activeChildCampaigns(); track camp.id) {
             <div class="border border-brand-dark/5 rounded-2xl overflow-hidden shadow-sm bg-neutral-50 hover:bg-neutral-100/50 transition">
-              <div class="h-20 bg-cover bg-center relative" [style.background-image]="'url(' + camp.bannerImage + ')'">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/20 p-2.5 flex items-end">
-                  <span class="text-[9px] font-extrabold uppercase tracking-wide bg-brand-yellow text-brand-dark px-1.5 py-0.5 rounded">RECOMENDADA</span>
-                </div>
+              <div class="h-16 bg-gradient-to-r from-brand-green/20 to-brand-yellow/20 flex items-center px-4 relative">
+                <span class="text-[9px] font-extrabold uppercase tracking-wide bg-brand-yellow text-brand-dark px-1.5 py-0.5 rounded">RECOMENDADA</span>
               </div>
               <div class="p-4">
                 <h4 class="font-bold text-xs text-brand-dark leading-tight">{{ camp.title }}</h4>
