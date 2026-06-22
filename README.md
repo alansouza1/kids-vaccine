@@ -101,3 +101,11 @@ A aplicação utiliza as melhores e mais modernas práticas do ecossistema Angul
    ```bash
    npm run build
    ```
+
+---
+
+## 🌐 Publicação
+
+A aplicação está publicada e disponível online via **Firebase Hosting**:
+
+[https://kids-vaccine.web.app/](https://kids-vaccine.web.app/)
