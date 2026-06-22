@@ -6,6 +6,12 @@ A aplicação foi construída utilizando **Ionic Framework com Angular** (Standa
 
 ---
 
+## 🌐 Publicação
+
+A aplicação está publicada e disponível online via **Firebase Hosting**:
+
+[https://kids-vaccine.web.app/](https://kids-vaccine.web.app/)
+
 ## 📸 Demonstração Visual (Screenshots)
 
 Aqui estão representadas as principais telas da aplicação:
@@ -103,9 +109,3 @@ A aplicação utiliza as melhores e mais modernas práticas do ecossistema Angul
    ```
 
 ---
-
-## 🌐 Publicação
-
-A aplicação está publicada e disponível online via **Firebase Hosting**:
-
-[https://kids-vaccine.web.app/](https://kids-vaccine.web.app/)
