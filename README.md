@@ -12,19 +12,19 @@ Aqui estão representadas as principais telas da aplicação:
 
 ### 1. Painel Principal (Dashboard)
 *Visualização geral da situação vacinal da criança ativa, métricas e alertas imediatos de atraso.*
-![Painel Principal](https://placehold.co/800x450/ABC270/473C33?text=Painel+Principal+-+Dashboard)
+![Painel Principal](docs/dashboard.png)
 
 ### 2. Caderneta de Vacinação Completa (Linha do Tempo)
 *Listagem de todas as vacinas do PNI com filtros rápidos por status (Todas, Aplicadas, Atrasadas e Agendadas).*
-![Caderneta Completa](https://placehold.co/800x450/FEC868/473C33?text=Caderneta+Completa+-+Timeline)
+![Caderneta Completa](docs/timeline.png)
 
 ### 3. Campanhas Ativas e Matching de Idade
 *Campanhas recomendadas com detecção inteligente com base na idade atual do perfil selecionado.*
-![Campanhas de Vacinação](https://placehold.co/800x450/FDA769/473C33?text=Campanhas+Ativas)
+![Campanhas de Vacinação](docs/campanhas.png)
 
 ### 4. Gestão Multicrianças (Perfis Familiares)
 *Gestão de múltiplos dependentes com dados físicos customizados e histórico vacinal totalmente isolado.*
-![Gestão Multicrianças](https://placehold.co/800x450/FBF9F6/473C33?text=Gest%C3%A3o+de+Perfis+Infantis)
+![Gestão Multicrianças](docs/children.png)
 
 ---
 
